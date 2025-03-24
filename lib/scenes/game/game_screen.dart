@@ -34,15 +34,46 @@ class _GameScreenState extends State<GameScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Gyroscope values:'),
+            const Text('Gyroscope values:'),
             Text('x: $x'),
             Text('y: $y'),
             Text('z: $z'),
             ElevatedButton(
-              child: Text("設定画面へ"),
+              child: const Text("設定画面へ"),
               onPressed: () {
                 context.go('/');
               },
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[300],
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(30),
+                  ),
+                  child: const Text(
+                    'RESET',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 30),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red[300],
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(30),
+                  ),
+                  child: const Text(
+                    'TAP',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
