@@ -1,45 +1,70 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
-
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
 # Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
-.pub/
-/build/
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
 
-# Symbolication related
-app.*.symbols
+# IntelliJ related
+.idea/
+*.iml
 
-# Obfuscation related
-app.*.map.json
+# VS Code related
+.vscode/
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# MacOS related
+.DS_Store
+
+# Android related
+.android/**
+local.properties
+android/app/.cxx/
+
+# Web related
+web/.dart_tool/
+web/.flutter-plugins
+web/.flutter-plugins-dependencies
+web/.packages
+web/build/
+
+# Linux related
+linux/.dart_tool/
+linux/.flutter-plugins
+linux/.flutter-plugins-dependencies
+linux/.packages
+linux/build/
+
+# Windows related
+windows/.dart_tool/
+windows/.flutter-plugins
+windows/.flutter-plugins-dependencies
+windows/.packages
+windows/build/
+
+# Fuchsia related
+.fuchsia/
+
+# CMake related
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Ignore response files
+*.rsp
+
+# Ignore Podfile
+ios/Podfile
+ios/Podfile.lock
+
+# macOS related
+macos/Podfile
+macos/Podfile.lock
