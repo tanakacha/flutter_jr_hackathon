@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AlarmScreen extends StatelessWidget {
-  const AlarmScreen({super.key});
+class GameScreen extends StatelessWidget {
+  const GameScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('アラーム設定'),
+        title: Text('ゲーム'),
       ),
       body: Center(
         child: ElevatedButton(
-          child: Text("ゲームへ"),
+          child: Text("設定へ"),
           onPressed: () {
-            context.go('/game');
+            context.go('/');
           },
         ),
       ),
