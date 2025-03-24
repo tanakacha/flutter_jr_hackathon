@@ -39,7 +39,7 @@ class _GameScreenState extends State<GameScreen> {
             Text('y: $y'),
             Text('z: $z'),
             ElevatedButton(
-              child: Text("設定へ"),
+              child: Text("設定画面へ"),
               onPressed: () {
                 context.go('/');
               },
