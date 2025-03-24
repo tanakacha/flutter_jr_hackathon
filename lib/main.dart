@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jr_hackathon/alarm/alarm_screen.dart';
+import 'package:flutter_jr_hackathon/route/router.dart';
 
 void main() {
   runApp(
@@ -12,8 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AlarmScreen(),
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
     );
   }
 }
