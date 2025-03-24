@@ -28,7 +28,7 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ゲーム'),
+        title: Text('シューティングゲーム'),
       ),
       body: Center(
         child: Column(
