@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_jr_hackathon/alarm/alarm_screen.dart';
+import 'package:flutter_jr_hackathon/scenes/alarm/alarm_screen.dart';
 
 void main() {
   runApp(
