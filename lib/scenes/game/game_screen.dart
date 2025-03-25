@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -11,6 +12,8 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   double x = 0.0, y = 0.0, z = 0.0;
+  int timerValue = 0;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -22,13 +25,40 @@ class _GameScreenState extends State<GameScreen> {
         z = event.z;
       });
     });
+
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  // タイマーをスタート
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        timerValue++;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ゲーム'),
+        centerTitle: true,
+        title: Text(
+          '00:00:${timerValue.toString().padLeft(2, '0')}',
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, size: 32),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Center(
         child: Column(
