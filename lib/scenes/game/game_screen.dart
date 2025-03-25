@@ -12,7 +12,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   double x = 0.0, y = 0.0, z = 0.0;
-  int timerValue = 0;
+  int totalSeconds = 0;
   late Timer _timer;
 
   @override
@@ -39,9 +39,15 @@ class _GameScreenState extends State<GameScreen> {
   void startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        timerValue++;
+        totalSeconds++;
       });
     });
+  }
+
+  String formatTime(int totalSeconds) {
+    int minutes = totalSeconds ~/ 60; // 分を計算
+    int seconds = totalSeconds % 60; // 秒を計算
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -50,7 +56,7 @@ class _GameScreenState extends State<GameScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '00:00:${timerValue.toString().padLeft(2, '0')}',
+          formatTime(totalSeconds),
           style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         actions: [
