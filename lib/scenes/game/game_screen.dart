@@ -1,7 +1,8 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_jr_hackathon/scenes/timer/timer_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -12,9 +13,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   double x = 0.0, y = 0.0, z = 0.0;
-  int timerValue = 0;
-  late Timer _timer;
-
+  
   @override
   void initState() {
     super.initState();
@@ -25,23 +24,6 @@ class _GameScreenState extends State<GameScreen> {
         z = event.z;
       });
     });
-
-    startTimer();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  // タイマーをスタート
-  void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        timerValue++;
-      });
-    });
   }
 
   @override
@@ -49,10 +31,7 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          '00:00:${timerValue.toString().padLeft(2, '0')}',
-          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
+        title: const TimerScene(),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, size: 32),
