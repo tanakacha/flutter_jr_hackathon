@@ -105,6 +105,21 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.adjust,
+                  size: 32,
+                  color: Colors.amber,
+                ),
+                Text(
+                  '×score/10',
+                  style: TextStyle(fontSize: 32),
+                ),
+              ],
+            ),
           ],
         ),
       ),
