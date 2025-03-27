@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/scenes/alarm/components/alarm_tile.dart';
 // import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 // import 'package:flutter_jr_hackathon/model/alarm_settings.dart';
-import 'package:flutter_jr_hackathon/scenes/alarm/edit_alarm_screen.dart';
+import 'package:flutter_jr_hackathon/scenes/alarm/components/edit_alarm_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -24,8 +24,11 @@ class _AlarmScreenState extends State<AlarmScreen> {
   // static StreamSubscription<AlarmSet>? updateSubscription;
 
   // 途中
-  // @override
-  // void initState()
+  @override
+  void initState() {
+    super.initState();
+    
+  }
 
   // フル
   // アラームは基本１つしか用意しないからAlarm.getAlarm()でも問題ないけど、exAppに合わせる
@@ -85,25 +88,16 @@ class _AlarmScreenState extends State<AlarmScreen> {
                             onPressed: () {
                               navigateToAlarmScreen(alarms[index]);
                             },
-
-                            // 中身を完成させる
-                            // key: Key(alarms[index].id.toString()),
-                            // title: TimeOfDay(
-                            //   hour: alarms[index].dateTime.hour,
-                            //   minute: alarms[index].dateTime.minute,
-                            // ).format(context),
-                            // onPressed: () =>
-                            //     navigateToAlarmScreen(alarms[index]),
-                            // onDismissed: () {
-                            //   Alarm.stop(alarms[index].id)
-                            //       .then((_) => loadAlarms());
-                            // },
+                            onDismissed: () {
+                              Alarm.stop(alarms[index].id)
+                                  .then((_) => loadAlarms());
+                            },
                           );
                         },
                       )
                     : Center(
                         child: Text(
-                          'No alarms set',
+                          'アラームなし',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),

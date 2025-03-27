@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:alarm/model/volume_settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
@@ -176,7 +177,7 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                 child: loading
                     ? CircularProgressIndicator()
                     : Text(
-                        '追加',
+                        '保存',
                         style: TextStyle(
                           color: Colors.blueAccent,
                         ),
@@ -198,6 +199,95 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 使い慣れているアラームはデフォルトでonだから不要かも
+              Text('アラーム音を繰り返す'),
+              CupertinoSwitch(
+                  value: loopAudio,
+                  onChanged: (value) {
+                    setState(() {
+                      loopAudio = value;
+                      print(loopAudio);
+                    });
+                  }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('バイブレーション'),
+              CupertinoSwitch(
+                value: vibrate,
+                onChanged: (value) {
+                  setState(() {
+                    vibrate = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('サウンド'),
+              DropdownButton(
+                value: assetAudio,
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'assets/marimba.mp3',
+                    child: Text('Marimba'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    assetAudio = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('音量の変更'),
+              CupertinoSwitch(
+                value: volume != null,
+                onChanged: (value) {
+                  setState(() {
+                    volume = value ? 0.5 : null;
+                  });
+                },
+              ),
+            ],
+          ),
+          if (volume != null)
+            SizedBox(
+              height: 45,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    volume! > 0.7
+                        ? Icons.volume_up_rounded
+                        : volume! > 0.1
+                            ? Icons.volume_down_rounded
+                            : Icons.volume_mute_rounded,
+                  ),
+                  Expanded(
+                    child: Slider(
+                      value: volume!,
+                      onChanged: (value) {
+                        setState(() {
+                          volume = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Row(),
         ],
       ),
