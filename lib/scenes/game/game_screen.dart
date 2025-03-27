@@ -34,12 +34,7 @@ class GameScreen extends StatelessWidget {
               flex: 3,
               child: ThreeDGameWidget(), // 3Dゲーム画面を内蔵
             ),
-            ElevatedButton(
-              child: const Text("設定画面へ"),
-              onPressed: () {
-                context.go('/');
-              },
-            ),
+           
             const SizedBox(height: 20),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,

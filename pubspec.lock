@@ -566,13 +566,21 @@ packages:
     source: hosted
     version: "0.0.3"
   three_js_geometry:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: three_js_geometry
       sha256: "042bddd64beb38cb3b5933f7e859241c23dd7e8da73afec6d3222550d393e62c"
       url: "https://pub.dev"
     source: hosted
     version: "0.0.2"
+  three_js_helpers:
+    dependency: transitive
+    description:
+      name: three_js_helpers
+      sha256: "7d9a1808653f1dda4eaa28e307ab37387625d74ca8aa0fa928fa5e3e9a26786f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   three_js_math:
     dependency: transitive
     description:
@@ -581,6 +589,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.4"
+  three_js_objects:
+    dependency: "direct main"
+    description:
+      name: three_js_objects
+      sha256: "8a0b6b3576eb43654170aff6025033ca49e24ca96ea3a4856207d0a7d15cbc1e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   three_js_sensors:
     dependency: transitive
     description:

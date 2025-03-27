@@ -7,7 +7,18 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:three_js_geometry/icosahedron.dart';
 import 'package:three_js/three_js.dart' as three;
+import 'package:three_js_objects/three_js_objects.dart';
+
+class SphereData {
+  SphereData(
+      {required this.mesh, required this.collider, required this.velocity});
+
+  three.Mesh mesh;
+  three.BoundingSphere collider;
+  three.Vector3 velocity;
+}
 
 class ThreeDGameWidget extends StatefulWidget {
   const ThreeDGameWidget({super.key});
@@ -20,6 +31,23 @@ class _ThreeDGameWidgetState extends State<ThreeDGameWidget> {
   List<int> data = List.filled(60, 0, growable: true);
   late Timer timer;
   late three.ThreeJS threeJs;
+
+  //以下玉関係
+  List<SphereData> spheres = [];
+  int sphereIdx = 0;
+  three.Vector3 playerDirection = three.Vector3();
+
+  Octree worldOctree = Octree();
+  Capsule playerCollider =
+      Capsule(three.Vector3(0, 0.35, 0), three.Vector3(0, 1, 0), 0.35);
+  bool playerOnFloor = true;
+  three.Vector3 playerVelocity = three.Vector3();
+  int mouseTime = 0;
+  double gravity = 30;
+
+  three.Vector3 vector1 = three.Vector3();
+  three.Vector3 vector2 = three.Vector3();
+  three.Vector3 vector3 = three.Vector3();
 
   @override
   void initState() {
@@ -63,6 +91,12 @@ class _ThreeDGameWidgetState extends State<ThreeDGameWidget> {
         body: Stack(
       children: [
         threeJs.build(),
+        ElevatedButton(
+          child: const Text("発射"),
+          onPressed: () {
+            throwBall();
+          },
+        ),
       ],
     ));
   }
@@ -219,5 +253,113 @@ class _ThreeDGameWidgetState extends State<ThreeDGameWidget> {
       }
     }
     prevTime = time;
+  }
+
+  void playerCollisions() {
+    OctreeData? result = worldOctree.capsuleIntersect(playerCollider);
+    playerOnFloor = false;
+    if (result != null) {
+      playerOnFloor = result.normal.y > 0;
+      if (!playerOnFloor) {
+        playerVelocity.addScaled(
+            result.normal, -result.normal.dot(playerVelocity));
+      }
+      if (result.depth > 0.02) {
+        playerCollider.translate(result.normal.scale(result.depth));
+      }
+    }
+  }
+
+  void spheresCollisions() {
+    for (int i = 0, length = spheres.length; i < length; i++) {
+      SphereData s1 = spheres[i];
+      for (int j = i + 1; j < length; j++) {
+        SphereData s2 = spheres[j];
+        num d2 = s1.collider.center.distanceToSquared(s2.collider.center);
+        double r = s1.collider.radius + s2.collider.radius;
+        double r2 = r * r;
+
+        if (d2 < r2) {
+          three.Vector3 normal =
+              vector1.sub2(s1.collider.center, s2.collider.center).normalize();
+          three.Vector3 v1 =
+              vector2.setFrom(normal).scale(normal.dot(s1.velocity));
+          three.Vector3 v2 =
+              vector3.setFrom(normal).scale(normal.dot(s2.velocity));
+
+          s1.velocity.add(v2).sub(v1);
+          s2.velocity.add(v1).sub(v2);
+
+          double d = (r - math.sqrt(d2)) / 2;
+
+          s1.collider.center.addScaled(normal, d);
+          s2.collider.center.addScaled(normal, -d);
+        }
+      }
+    }
+  }
+
+  void throwBall() {
+    print("throwBall");
+    double sphereRadius = 10;
+    IcosahedronGeometry sphereGeometry = IcosahedronGeometry(sphereRadius, 5);
+    print("Geometry created: $sphereGeometry");
+    three.MeshLambertMaterial sphereMaterial =
+        three.MeshLambertMaterial.fromMap({'color': 0xbbbb44});
+
+    final three.Mesh newsphere = three.Mesh(sphereGeometry, sphereMaterial);
+    newsphere.castShadow = true;
+    newsphere.receiveShadow = true;
+
+    threeJs.scene.add(newsphere);
+    print("Sphere added to scene");
+
+    spheres.add(SphereData(
+        mesh: newsphere,
+        collider: three.BoundingSphere(three.Vector3(0, -100, 0), sphereRadius),
+        velocity: three.Vector3()));
+    SphereData sphere = spheres.last;
+    threeJs.camera.getWorldDirection(playerDirection);
+    print("Camera direction: $playerDirection");
+    print("Player collider end: ${playerCollider.end}");
+    sphere.collider.center
+        .setFrom(playerCollider.end)
+        .addScaled(playerDirection, playerCollider.radius * 1.5);
+    // throw the ball with more force if we hold the button longer, and if we move forward
+    double impulse = 5 +
+        10 *
+            (1 -
+                math.exp((mouseTime - DateTime.now().millisecondsSinceEpoch) *
+                    0.001));
+    sphere.velocity.setFrom(playerDirection).scale(impulse);
+    sphere.velocity.addScaled(playerVelocity, 2);
+    sphereIdx = (sphereIdx + 1) % spheres.length;
+    print("Sphere velocity: ${sphere.velocity}");
+    print("Sphere position: ${sphere.collider.center}");
+  }
+
+  void updateSpheres(double deltaTime) {
+    for (final sphere in spheres) {
+      sphere.collider.center.addScaled(sphere.velocity, deltaTime);
+      OctreeData? result = worldOctree.sphereIntersect(sphere.collider);
+      if (result != null) {
+        sphere.velocity.addScaled(
+            result.normal, -result.normal.dot(sphere.velocity) * 1.5);
+        sphere.collider.center.add(result.normal.scale(result.depth));
+      } else {
+        sphere.velocity.y -= gravity * deltaTime;
+      }
+
+      double damping = math.exp(-1.5 * deltaTime) - 1;
+      sphere.velocity.addScaled(sphere.velocity, damping);
+
+      // playerSphereCollision(sphere);
+    }
+
+    spheresCollisions();
+
+    for (SphereData sphere in spheres) {
+      sphere.mesh.position.setFrom(sphere.collider.center);
+    }
   }
 }
