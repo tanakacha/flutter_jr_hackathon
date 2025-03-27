@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/scenes/timer/timer_screen.dart';
-import 'package:flutter_jr_hackathon/utils/game/statics.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:async';
@@ -10,14 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:three_js/three_js.dart' as three;
 
-class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+class ThreeDGameWidget extends StatefulWidget {
+  const ThreeDGameWidget({super.key});
 
   @override
-  createState() => _State();
+  _ThreeDGameWidgetState createState() => _ThreeDGameWidgetState();
 }
 
-class _State extends State<GameScreen> {
+class _ThreeDGameWidgetState extends State<ThreeDGameWidget> {
   List<int> data = List.filled(60, 0, growable: true);
   late Timer timer;
   late three.ThreeJS threeJs;
@@ -62,15 +61,11 @@ class _State extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-      children: [threeJs.build(), Statistics(data: data)],
+      children: [
+        threeJs.build(),
+      ],
     ));
   }
-
-  // bool moveForward = false;
-  // bool moveBackward = false;
-  // bool moveLeft = false;
-  // bool moveRight = false;
-  // bool canJump = false;
 
   final velocity = three.Vector3.zero();
   final direction = three.Vector3.zero();
