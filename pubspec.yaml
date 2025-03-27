@@ -40,6 +40,8 @@ dependencies:
   riverpod_annotation: ^2.6.1
   flutter_riverpod: ^2.6.1
   alarm: ^5.1.0
+  logging: ^1.3.0
+  timezone: ^0.10.0
 
 dev_dependencies:
   flutter_test:

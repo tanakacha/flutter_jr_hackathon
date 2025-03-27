@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:alarm/alarm.dart';
+import 'package:alarm/utils/alarm_set.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/scenes/alarm/components/alarm_tile.dart';
 // import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 // import 'package:flutter_jr_hackathon/model/alarm_settings.dart';
 import 'package:flutter_jr_hackathon/scenes/alarm/components/edit_alarm_screen.dart';
+import 'package:flutter_jr_hackathon/scenes/alarm/components/ring_screen.dart';
+import 'package:flutter_jr_hackathon/services/notification.dart';
 import 'package:go_router/go_router.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -18,16 +21,25 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   // まだ使ってない
   List<AlarmSettings> alarms = [];
-  // Notifications? notifications;
+  Notifications? notifications;
 
-  // static StreamSubscription<AlarmSet>? ringSubscription;
-  // static StreamSubscription<AlarmSet>? updateSubscription;
+  static StreamSubscription<AlarmSet>? ringSubscription;
+  static StreamSubscription<AlarmSet>? updateSubscription;
 
   // 途中
   @override
   void initState() {
     super.initState();
-    
+    // permission.dartの中身
+    // AlarmPermissions.checkNotificationPermission().then(
+    //   (_) => AlarmPermissions.checkAndroidScheduleExactAlarmPermission(),
+    // );
+    unawaited(loadAlarms());
+    ringSubscription ??= Alarm.ringing.listen(ringingAlarmsChanged);// この行から遷移はできた、これだけじゃ音はならない
+    updateSubscription ??= Alarm.scheduled.listen((_) {
+      unawaited(loadAlarms());
+    });
+    notifications = Notifications();
   }
 
   // フル
@@ -40,8 +52,17 @@ class _AlarmScreenState extends State<AlarmScreen> {
     });
   }
 
-  // 途中
-  // ringing~~
+  // フル
+  Future<void> ringingAlarmsChanged(AlarmSet alarms) async {
+    if (alarms.alarms.isEmpty) return;
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(builder: (context) {
+        return RingScreen(alarmSettings: alarms.alarms.first);
+      }),
+    );
+    unawaited(loadAlarms());
+  }
 
   // フル
   Future<void> navigateToAlarmScreen(AlarmSettings? settings) async {
