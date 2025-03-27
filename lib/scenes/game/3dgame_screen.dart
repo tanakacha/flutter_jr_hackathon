@@ -37,6 +37,16 @@ class _State extends State<GameScreen> {
       setup: setup,
     );
     super.initState();
+
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      setState(() {
+        yaw += event.y * 0.1; // Y軸の回転データを使用
+        pitch += event.x * 0.1; // X軸の回転データを使用
+
+        // カメラの回転を更新
+        updateCameraRotation();
+      });
+    });
   }
 
   @override
@@ -67,12 +77,21 @@ class _State extends State<GameScreen> {
   final vertex = three.Vector3.zero();
   final color = three.Color();
 
+  // ジャイロスコープのデータを保持
+  double yaw = 0.0; // 水平方向の回転
+  double pitch = 0.0; // 垂直方向の回転
+
   late three.PointerLockControls controls;
   late three.Raycaster raycaster;
 
   List<three.Mesh> objects = [];
 
   int prevTime = DateTime.now().microsecondsSinceEpoch;
+
+  void updateCameraRotation() {
+    // カメラの回転をジャイロスコープデータに基づいて更新
+    threeJs.camera.rotation.set(pitch, yaw, 0);
+  }
 
   Future<void> setup() async {
     threeJs.camera =
@@ -89,76 +108,9 @@ class _State extends State<GameScreen> {
 
     controls = three.PointerLockControls(threeJs.camera, threeJs.globalKey);
 
-    //const blocker = document.getElementById( 'blocker' );
-    //const instructions = document.getElementById( 'instructions' );
-
-    // instructions.addEventListener( 'click', (){
     controls.lock();
-    // });
-
-    // controls.addEventListener( 'lock', () {
-    //   instructions.style.display = 'none';
-    //   blocker.style.display = 'none';
-    // });
-
-    // controls.addEventListener( 'unlock', () {
-    //   blocker.style.display = 'block';
-    //   instructions.style.display = '';
-    // });
 
     threeJs.scene.add(controls.getObject);
-
-    // void onKeyDown(event) {
-    //   event as LogicalKeyboardKey;
-    //   switch (event.keyLabel.toLowerCase()) {
-    //     case 'arrow up':
-    //     case 'w':
-    //       moveForward = true;
-    //       break;
-    //     case 'arrow left':
-    //     case 'a':
-    //       moveLeft = true;
-    //       break;
-    //     case 'arrow down':
-    //     case 's':
-    //       moveBackward = true;
-    //       break;
-    //     case 'arrow right':
-    //     case 'd':
-    //       moveRight = true;
-    //       break;
-    //     case ' ':
-    //       if (canJump == true) velocity.y += 350;
-    //       canJump = false;
-    //       break;
-    //   }
-    // }
-
-    // void onKeyUp(event) {
-    //   event as LogicalKeyboardKey;
-    //   switch (event.keyLabel.toLowerCase()) {
-    //     case 'arrow up':
-    //     case 'w':
-    //       moveForward = false;
-    //       break;
-    //     case 'arrow left':
-    //     case 'a':
-    //       moveLeft = false;
-    //       break;
-    //     case 'arrow down':
-    //     case 's':
-    //       moveBackward = false;
-    //       break;
-    //     case 'arrow right':
-    //     case 'd':
-    //       moveRight = false;
-    //       break;
-    //   }
-    // }
-
-    // threeJs.domElement
-    //     .addEventListener(three.PeripheralType.keydown, onKeyDown);
-    // threeJs.domElement.addEventListener(three.PeripheralType.keyup, onKeyUp);
 
     raycaster =
         three.Raycaster(three.Vector3.zero(), three.Vector3(0, -1, 0), 0, 10);
@@ -226,7 +178,7 @@ class _State extends State<GameScreen> {
 
       final box = three.Mesh(boxGeometry, boxMaterial);
       box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 10;
+      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
       box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
 
       threeJs.scene.add(box);
@@ -257,19 +209,8 @@ class _State extends State<GameScreen> {
 
       velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-      // direction.z = number(moveForward) - number(moveBackward);
-      // direction.x = number(moveRight) - number(moveLeft);
       direction
           .normalize(); // this ensures consistent movements in all directions
-
-      // if (moveForward || moveBackward)
-      //   velocity.z -= direction.z * 400.0 * delta;
-      // if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
-
-      // if (onObject == true) {
-      //   velocity.y = math.max(0, velocity.y);
-      //   canJump = true;
-      // }
 
       controls.moveRight(-velocity.x * delta);
       controls.moveForward(-velocity.z * delta);

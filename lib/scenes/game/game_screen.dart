@@ -178,7 +178,7 @@ class _State extends State<GameScreen> {
 
       final box = three.Mesh(boxGeometry, boxMaterial);
       box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 10;
+      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
       box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
 
       threeJs.scene.add(box);
