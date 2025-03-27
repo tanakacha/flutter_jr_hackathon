@@ -36,7 +36,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
       (_) => AlarmPermissions.checkAndroidScheduleExactAlarmPermission(),
     );
     unawaited(loadAlarms());
-    ringSubscription ??= Alarm.ringing.listen(ringingAlarmsChanged);// この行から遷移はできた、これだけじゃ音はならない
+    ringSubscription ??= Alarm.ringing.listen(ringingAlarmsChanged);
     updateSubscription ??= Alarm.scheduled.listen((_) {
       unawaited(loadAlarms());
     });
@@ -56,12 +56,14 @@ class _AlarmScreenState extends State<AlarmScreen> {
   // フル
   Future<void> ringingAlarmsChanged(AlarmSet alarms) async {
     if (alarms.alarms.isEmpty) return;
+    // 仮の確認画面用
     await Navigator.push(
       context,
       MaterialPageRoute<void>(builder: (context) {
         return RingScreen(alarmSettings: alarms.alarms.first);
       }),
     );
+    // context.go('/game'); // ゲーム画面用、確認画面に変更する
     unawaited(loadAlarms());
   }
 
