@@ -9,6 +9,7 @@ import 'package:flutter_jr_hackathon/scenes/alarm/components/alarm_tile.dart';
 import 'package:flutter_jr_hackathon/scenes/alarm/components/edit_alarm_screen.dart';
 import 'package:flutter_jr_hackathon/scenes/alarm/components/ring_screen.dart';
 import 'package:flutter_jr_hackathon/services/notification.dart';
+import 'package:flutter_jr_hackathon/services/permission.dart';
 import 'package:go_router/go_router.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -30,10 +31,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   void initState() {
     super.initState();
-    // permission.dartの中身
-    // AlarmPermissions.checkNotificationPermission().then(
-    //   (_) => AlarmPermissions.checkAndroidScheduleExactAlarmPermission(),
-    // );
+    // permission.dartの中身 ここだけコメントアウト外すと例外が発生する
+    AlarmPermissions.checkNotificationPermission().then(
+      (_) => AlarmPermissions.checkAndroidScheduleExactAlarmPermission(),
+    );
     unawaited(loadAlarms());
     ringSubscription ??= Alarm.ringing.listen(ringingAlarmsChanged);// この行から遷移はできた、これだけじゃ音はならない
     updateSubscription ??= Alarm.scheduled.listen((_) {
