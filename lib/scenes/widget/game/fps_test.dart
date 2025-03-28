@@ -199,6 +199,28 @@ class _FPSGamePageState extends State<FPSGameTest> {
       objects.add(box);
     }
 
+    // // 的の設定
+    // final targetGeometry = three.PlaneGeometry(5, 32); // 半径5の円形
+    // final targetMaterial = three.MeshBasicMaterial.fromMap({
+    //   'color': 0xff0000, // 赤色
+    //   'side': three.DoubleSide, // 両面を描画
+    // });
+
+    // final target = three.Mesh(targetGeometry, targetMaterial);
+
+    // // 的をプレイヤーの前方に配置
+    // three.Vector3 targetPosition = three.Vector3()
+    //   ..setFrom(threeJs.camera.position)
+    //   ..addScaled(getForwardVector(), 20.0); // プレイヤーの前方20ユニット
+    // target.position.setFrom(targetPosition);
+
+    // // 的をシーンに追加
+    // threeJs.scene.add(target);
+    // objects.add(target); // 的をオブジェクトリストに追加
+
+    // 的のモデルを読み込む
+    await loadTargetModel();
+
     threeJs.addAnimationEvent((dt) {
       double deltaTime = math.min(0.05, dt) / stepsPerFrame;
       if (deltaTime != 0) {
@@ -209,6 +231,36 @@ class _FPSGamePageState extends State<FPSGameTest> {
         }
       }
     });
+  }
+
+  Future<void> loadTargetModel() async {
+    final loader = three.OBJLoader(); // モデルのパスを設定
+
+    try {
+      // モデルを非同期でロード
+      final obj = (await loader
+          .fromAsset('assets/models/target.obj'))!; // 修正: `gltf`ではなく`obj`
+
+      // 的の位置を設定
+      three.Vector3 targetPosition = three.Vector3()
+        ..setFrom(threeJs.camera.position)
+        ..addScaled(getForwardVector(), 20.0); // プレイヤーの前方20ユニット
+      obj.position.setFrom(targetPosition);
+
+      // 子オブジェクトをトラバースして設定
+      obj.traverse((child) {
+        if (child is three.Mesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+
+      // 的をシーンに追加
+      threeJs.scene.add(obj);
+      objects.add(obj as three.Mesh); // 的をオブジェクトリストに追加
+    } catch (e) {
+      print('Error loading target model: $e');
+    }
   }
 
   void throwBall() {

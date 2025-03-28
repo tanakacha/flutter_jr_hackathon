@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   flutter_angle
+  flutter_gl_windows
   permission_handler_windows
 )
 
