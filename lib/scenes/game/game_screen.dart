@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
@@ -144,6 +145,22 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     child: const Text(
                       '設定画面へ',
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ),
+                  // クリア画面へボタン
+                  ElevatedButton(
+                    onPressed: () {
+                      // Alarm.stop(widget.alarmSettings.id);
+                      context.go('/clear');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 15),
+                    ),
+                    child: const Text(
+                      'クリア画面へ',
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                   ),
