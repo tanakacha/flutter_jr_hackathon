@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:three_js/three_js.dart' as three;
 import 'package:three_js_geometry/three_js_geometry.dart';
 import 'package:three_js_objects/three_js_objects.dart';
@@ -32,6 +33,10 @@ class _FPSGamePageState extends State<FPSGameTest> {
   final color = three.Color();
   List<three.Mesh> objects = [];
 
+  // ジャイロスコープのデータを保持
+  double yaw = 0.0; // 水平方向の回転
+  double pitch = 0.0; // 垂直方向の回転
+
   @override
   void initState() {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -59,59 +64,18 @@ class _FPSGamePageState extends State<FPSGameTest> {
                 (event as three.WebPointerEvent).movementX / 100;
             threeJs.camera.rotation.x -= event.movementY / 100;
           });
-          threeJs.domElement.addEventListener(three.PeripheralType.keydown,
-              (event) {
-            switch (event.keyId) {
-              case 4294968068:
-              case 119:
-                keyStates[LogicalKeyboardKey.arrowUp] = true;
-                break;
-              case 115:
-              case 4294968065:
-                keyStates[LogicalKeyboardKey.arrowDown] = true;
-                break;
-              case 97:
-              case 4294968066:
-                keyStates[LogicalKeyboardKey.arrowLeft] = true;
-                break;
-              case 4294968067:
-              case 100:
-                keyStates[LogicalKeyboardKey.arrowRight] = true;
-                break;
-              case 32:
-                keyStates[LogicalKeyboardKey.space] = true;
-                break;
-            }
-          });
-
-          // Reset force on keyup
-          threeJs.domElement.addEventListener(three.PeripheralType.keyup,
-              (event) {
-            switch (event.keyId) {
-              case 4294968068:
-              case 119:
-                keyStates[LogicalKeyboardKey.arrowUp] = false;
-                break;
-              case 115:
-              case 4294968065:
-                keyStates[LogicalKeyboardKey.arrowDown] = false;
-                break;
-              case 97:
-              case 4294968066:
-                keyStates[LogicalKeyboardKey.arrowLeft] = false;
-                break;
-              case 4294968067:
-              case 100:
-                keyStates[LogicalKeyboardKey.arrowRight] = false;
-                break;
-              case 32:
-                keyStates[LogicalKeyboardKey.space] = false;
-                break;
-            }
-          });
         },
         setup: setup);
     super.initState();
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      setState(() {
+        yaw += event.y * 0.1; // Y軸の回転データを使用
+        pitch += event.x * 0.1; // X軸の回転データを使用
+
+        // カメラの回転を更新
+        updateCameraRotation();
+      });
+    });
   }
 
   @override
@@ -120,6 +84,11 @@ class _FPSGamePageState extends State<FPSGameTest> {
     threeJs.dispose();
     three.loading.clear();
     super.dispose();
+  }
+
+  void updateCameraRotation() {
+    // カメラの回転をジャイロスコープデータに基づいて更新
+    threeJs.camera.rotation.set(pitch, yaw, 0);
   }
 
   @override
@@ -164,6 +133,8 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
     threeJs.camera =
         three.PerspectiveCamera(70, threeJs.width / threeJs.height, 0.1, 1000);
+
+    threeJs.camera.position.y = 10;
     threeJs.camera.rotation.order = three.RotationOrders.yxz;
 
     // ライト設定
@@ -213,15 +184,15 @@ class _FPSGamePageState extends State<FPSGameTest> {
     boxGeometry.setAttributeFromString(
         'color', three.Float32BufferAttribute.fromList(colorsBox, 3));
 
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 400; i++) {
       final boxMaterial = three.MeshPhongMaterial.fromMap(
           {'specular': 0xffffff, 'flatShading': true, 'vertexColors': true});
       boxMaterial.color.setHSL(math.Random().nextDouble() * 0.2 + 0.5, 0.75,
           math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
 
       final box = three.Mesh(boxGeometry, boxMaterial);
-      box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 10;
+      box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
+      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
       box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
 
       threeJs.scene.add(box);
@@ -233,7 +204,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
       if (deltaTime != 0) {
         for (int i = 0; i < stepsPerFrame; i++) {
           controls(deltaTime);
-          updatePlayer(deltaTime);
           updateSpheres(deltaTime);
           teleportPlayerIfOob();
         }
@@ -242,7 +212,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   }
 
   void throwBall() {
-    double sphereRadius = 0.2;
+    double sphereRadius = 2;
     IcosahedronGeometry sphereGeometry = IcosahedronGeometry(sphereRadius, 5);
     three.MeshLambertMaterial sphereMaterial =
         three.MeshLambertMaterial.fromMap({'color': 0xbbbb44});
@@ -254,22 +224,21 @@ class _FPSGamePageState extends State<FPSGameTest> {
     threeJs.scene.add(newsphere);
     spheres.add(SphereData(
         mesh: newsphere,
-        collider: three.BoundingSphere(three.Vector3(0, -100, 0), sphereRadius),
+        collider: three.BoundingSphere(three.Vector3(0, 10, 0), sphereRadius),
         velocity: three.Vector3()));
     SphereData sphere = spheres.last;
+
+    // カメラの向いている方向を取得
     threeJs.camera.getWorldDirection(playerDirection);
+
+    // スフィアの初期位置をカメラの位置から設定
     sphere.collider.center
-        .setFrom(playerCollider.end)
-        .addScaled(playerDirection, playerCollider.radius * 1.5);
-    // throw the ball with more force if we hold the button longer, and if we move forward
-    double impulse = 15 +
-        30 *
-            (1 -
-                math.exp((mouseTime - DateTime.now().millisecondsSinceEpoch) *
-                    0.001));
-    sphere.velocity.setFrom(playerDirection).scale(impulse);
-    sphere.velocity.addScaled(playerVelocity, 2);
-    sphereIdx = (sphereIdx + 1) % spheres.length;
+        .setFrom(threeJs.camera.position)
+        .addScaled(playerDirection, 2.0); // カメラの前方にスフィアを配置
+
+    // スフィアをカメラの方向に一定速度で飛ばす
+    double fixedSpeed = 50.0; // 固定速度
+    sphere.velocity.setFrom(playerDirection).scale(fixedSpeed); // 一定速度で設定
   }
 
   void playerCollisions() {
@@ -285,21 +254,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
         playerCollider.translate(result.normal.scale(result.depth));
       }
     }
-  }
-
-  void updatePlayer(double deltaTime) {
-    double damping = math.exp(-4 * deltaTime) - 1;
-    if (!playerOnFloor) {
-      playerVelocity.y -= gravity * deltaTime;
-      // small air resistance
-      damping *= 0.1;
-    }
-
-    playerVelocity.addScaled(playerVelocity, damping);
-    three.Vector3 deltaPosition = playerVelocity.clone().scale(deltaTime);
-    playerCollider.translate(deltaPosition);
-    playerCollisions();
-    threeJs.camera.position.setFrom(playerCollider.end);
   }
 
   void playerSphereCollision(SphereData sphere) {
@@ -367,15 +321,13 @@ class _FPSGamePageState extends State<FPSGameTest> {
       sphere.collider.center.addScaled(sphere.velocity, deltaTime);
       OctreeData? result = worldOctree.sphereIntersect(sphere.collider);
       if (result != null) {
-        sphere.velocity.addScaled(
-            result.normal, -result.normal.dot(sphere.velocity) * 1.5);
         sphere.collider.center.add(result.normal.scale(result.depth));
       } else {
-        sphere.velocity.y -= gravity * deltaTime;
+        // sphere.velocity.y -= gravity * deltaTime;
       }
 
-      double damping = math.exp(-1.5 * deltaTime) - 1;
-      sphere.velocity.addScaled(sphere.velocity, damping);
+      // double damping = math.exp(-1.5 * deltaTime) - 1;
+      // sphere.velocity.addScaled(sphere.velocity, damping);
 
       playerSphereCollision(sphere);
     }
