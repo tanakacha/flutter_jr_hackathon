@@ -3,42 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class GyroController {
-  double x = 0.0;  // ジャイロデータX
-  double y = 0.0;  // ジャイロデータY
-  double z = 0.0;  // ジャイロデータZ
-
-  double targetX = 0.0;  // 的のX座標
-  double targetY = 0.0;  // 的のY座標
+  List<Offset> targets = [];    // 複数の的の座標を格納
   final Random random = Random();
-  final double threshold = 0.1;  // 閾値
 
+  double x = 0.0, y = 0.0, z = 0.0;  // ジャイロセンサーの値
+
+  /// ジャイロセンサー初期化
   void initGyro() {
-    gyroscopeEvents.listen((GyroscopeEvent event) {
-      // ジャイロデータを更新
+    gyroscopeEvents.listen((event) {
       x = event.x;
       y = event.y;
       z = event.z;
-
-      // 的の座標を更新
-      targetX += y * 10;  // Y軸でX座標を更新
-      targetY += x * 10;  // X軸でY座標を更新
-      print('Gyro: x=$x, y=$y, z=$z');
     });
   }
 
-  void generateNewTarget(BuildContext context) {
-    // ランダムな位置に的を生成
-    targetX = random.nextDouble() * MediaQuery.of(context).size.width;
-    targetY = random.nextDouble() * MediaQuery.of(context).size.height;
-    print('New Target: ($targetX, $targetY)');
+  /// ランダムな座標を生成
+  Offset generateRandomTarget(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    double targetX = random.nextDouble() * (width - 100) + 50;  // 50pxのマージン
+    double targetY = random.nextDouble() * (height - 200) + 100;
+
+    return Offset(targetX, targetY);
   }
 
-  void resetPosition() {
-    // ジャイロと的をリセット
-    x = 0.0;
-    y = 0.0;
-    z = 0.0;
-    targetX = 0.0;
-    targetY = 0.0;
+  /// 複数の的をランダムに配置
+  void generateMultipleTargets(BuildContext context, int count) {
+    targets = List.generate(count, (_) => generateRandomTarget(context));
   }
 }
