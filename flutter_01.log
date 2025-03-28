@@ -1,0 +1,137 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run
+
+## exception
+
+FormatException: FormatException: Unexpected character (at character 1)
+}{"method":"Runtime.consoleAPICalled","params":{"type":"log","args":[{"type...
+^
+
+
+```
+#0      _ChunkedJsonParser.fail (dart:convert-patch/convert_patch.dart:1463:5)
+#1      _ChunkedJsonParser.parse (dart:convert-patch/convert_patch.dart:923:13)
+#2      _parseJson (dart:convert-patch/convert_patch.dart:35:10)
+#3      JsonDecoder.convert (dart:convert/json.dart:641:36)
+#4      JsonCodec.decode (dart:convert/json.dart:223:41)
+#5      jsonDecode (dart:convert/json.dart:160:12)
+#6      new WipConnection._.onData (package:webkit_inspection_protocol/webkit_inspection_protocol.dart:240:18)
+#7      _rootRunUnary (dart:async/zone.dart:1538:47)
+#8      _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+#9      _CustomZone.runUnaryGuarded (dart:async/zone.dart:1329:7)
+#10     _BufferingStreamSubscription._sendData (dart:async/stream_impl.dart:381:11)
+#11     _BufferingStreamSubscription._add (dart:async/stream_impl.dart:312:7)
+#12     _SyncStreamControllerDispatch._sendData (dart:async/stream_controller.dart:798:19)
+#13     _StreamController._add (dart:async/stream_controller.dart:663:7)
+#14     _StreamController.add (dart:async/stream_controller.dart:618:5)
+#15     new _WebSocketImpl._fromSocket.<anonymous closure> (dart:_http/websocket_impl.dart:1257:31)
+#16     _rootRunUnary (dart:async/zone.dart:1538:47)
+#17     _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+#18     _CustomZone.runUnaryGuarded (dart:async/zone.dart:1329:7)
+#19     _BufferingStreamSubscription._sendData (dart:async/stream_impl.dart:381:11)
+#20     _BufferingStreamSubscription._add (dart:async/stream_impl.dart:312:7)
+#21     _SinkTransformerStreamSubscription._add (dart:async/stream_transformers.dart:67:11)
+#22     _EventSinkWrapper.add (dart:async/stream_transformers.dart:13:11)
+#23     _WebSocketProtocolTransformer._messageFrameEnd (dart:_http/websocket_impl.dart:347:23)
+#24     _WebSocketProtocolTransformer.add (dart:_http/websocket_impl.dart:238:46)
+#25     _SinkTransformerStreamSubscription._handleData (dart:async/stream_transformers.dart:115:24)
+#26     _rootRunUnary (dart:async/zone.dart:1538:47)
+#27     _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+#28     _CustomZone.runUnaryGuarded (dart:async/zone.dart:1329:7)
+#29     _BufferingStreamSubscription._sendData (dart:async/stream_impl.dart:381:11)
+#30     _BufferingStreamSubscription._add (dart:async/stream_impl.dart:312:7)
+#31     _SyncStreamControllerDispatch._sendData (dart:async/stream_controller.dart:798:19)
+#32     _StreamController._add (dart:async/stream_controller.dart:663:7)
+#33     _StreamController.add (dart:async/stream_controller.dart:618:5)
+#34     _Socket._onData (dart:io-patch/socket_patch.dart:2904:41)
+#35     _rootRunUnary (dart:async/zone.dart:1546:13)
+#36     _CustomZone.runUnary (dart:async/zone.dart:1429:19)
+#37     _CustomZone.runUnaryGuarded (dart:async/zone.dart:1329:7)
+#38     _BufferingStreamSubscription._sendData (dart:async/stream_impl.dart:381:11)
+#39     _BufferingStreamSubscription._add (dart:async/stream_impl.dart:312:7)
+#40     _SyncStreamControllerDispatch._sendData (dart:async/stream_controller.dart:798:19)
+#41     _StreamController._add (dart:async/stream_controller.dart:663:7)
+#42     _StreamController.add (dart:async/stream_controller.dart:618:5)
+#43     new _RawSocket.<anonymous closure> (dart:io-patch/socket_patch.dart:2323:31)
+#44     _NativeSocket.issueReadEvent.issue (dart:io-patch/socket_patch.dart:1646:14)
+#45     _microtaskLoop (dart:async/schedule_microtask.dart:40:21)
+#46     _startMicrotaskLoop (dart:async/schedule_microtask.dart:49:5)
+#47     _runPendingImmediateCallback (dart:isolate-patch/isolate_patch.dart:128:13)
+#48     _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:195:5)
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.29.2, on macOS 15.3.1 24D70 darwin-arm64, locale ja-JP) [4.7s]
+    [32m•[39m Flutter version 3.29.2 on channel stable at /Users/uramasachika/development/flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision c236373904 (2 weeks ago), 2025-03-13 16:17:06 -0400
+    [32m•[39m Engine revision 18b71d647a
+    [32m•[39m Dart version 3.7.2
+    [32m•[39m DevTools version 2.42.3
+
+[32m[✓][39m Android toolchain - develop for Android devices (Android SDK version 35.0.1) [77.2s]
+    [32m•[39m Android SDK at /Users/uramasachika/Library/Android/sdk
+    [32m•[39m Platform android-35, build-tools 35.0.1
+    [32m•[39m Java binary at: /Users/uramasachika/Applications/Android
+      Studio.app/Contents/jbr/Contents/Home/bin/java
+      This is the JDK bundled with the latest Android Studio installation on this machine.
+      To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+    [32m•[39m Java version OpenJDK Runtime Environment (build 17.0.10+0-17.0.10b1087.21-11572160)
+    [32m•[39m All Android licenses accepted.
+
+[32m[✓][39m Xcode - develop for iOS and macOS (Xcode 16.2) [77.0s]
+    [32m•[39m Xcode at /Applications/Xcode.app/Contents/Developer
+    [32m•[39m Build 16C5032a
+    [32m•[39m CocoaPods version 1.16.2
+
+[32m[✓][39m Chrome - develop for the web [7ms]
+    [32m•[39m Chrome at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+[32m[✓][39m Android Studio (version 2023.3) [7ms]
+    [32m•[39m Android Studio at /Users/uramasachika/Applications/Android Studio.app/Contents
+    [32m•[39m Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    [32m•[39m Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    [32m•[39m Java version OpenJDK Runtime Environment (build 17.0.10+0-17.0.10b1087.21-11572160)
+
+[32m[✓][39m VS Code (version 1.98.2) [5ms]
+    [32m•[39m VS Code at /Applications/Visual Studio Code.app/Contents
+    [32m•[39m Flutter extension version 3.106.0
+
+[32m[✓][39m Connected device (4 available) [76.9s]
+    [32m•[39m 浦晶子のiPhone (wireless) (mobile)  • 00008020-00020DD222FA002E • ios            • iOS
+      18.3.1 22D72
+    [32m•[39m macOS (desktop)                 • macos                     • darwin-arm64   • macOS
+      15.3.1 24D70 darwin-arm64
+    [32m•[39m Mac Designed for iPad (desktop) • mac-designed-for-ipad     • darwin         • macOS
+      15.3.1 24D70 darwin-arm64
+    [32m•[39m Chrome (web)                    • chrome                    • web-javascript • Google
+      Chrome 134.0.6998.166
+
+[33m[!][39m Network resources [77.0s]
+    [31m✗[39m A cryptographic error occurred while checking "https://pub.dev/": Connection terminated
+      during handshake
+      You may be experiencing a man-in-the-middle attack, your network may be compromised, or
+      you may have malware installed on your computer.
+    [31m✗[39m A cryptographic error occurred while checking "https://storage.googleapis.com/":
+      Connection terminated during handshake
+      You may be experiencing a man-in-the-middle attack, your network may be compromised, or
+      you may have malware installed on your computer.
+    [31m✗[39m A cryptographic error occurred while checking "https://maven.google.com/": Connection
+      terminated during handshake
+      You may be experiencing a man-in-the-middle attack, your network may be compromised, or
+      you may have malware installed on your computer.
+    [31m✗[39m A cryptographic error occurred while checking "https://cocoapods.org/": Connection
+      terminated during handshake
+      You may be experiencing a man-in-the-middle attack, your network may be compromised, or
+      you may have malware installed on your computer.
+
+[33m![39m Doctor found issues in 1 category.
+```

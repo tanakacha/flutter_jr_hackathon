@@ -89,11 +89,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 2秒後に自動的に画面遷移
-    Timer(const Duration(seconds: 2), () {
-      context.go('/game');
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('アラーム設定'),
