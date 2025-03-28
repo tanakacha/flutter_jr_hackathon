@@ -133,6 +133,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
                 child: Icon(Icons.alarm_add_rounded, size: 33),
               ),
               ElevatedButton(
+                child: Text("確認画面へ"),
+                onPressed: () {
+                  context.go('/check');
+                },
+              ),
+              ElevatedButton(
                 child: Text("ゲームへ"),
                 onPressed: () {
                   context.go('/game');
