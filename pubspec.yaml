@@ -44,6 +44,7 @@ dependencies:
   timezone: ^0.10.0
   flutter_local_notifications: ^19.0.0
   permission_handler: ^11.4.0
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ dev_dependencies:
   riverpod_generator: ^2.6.5
   build_runner: ^2.4.15
   json_serializable: ^6.9.4
+  go_router_builder: ^2.8.2
 
 flutter:
 
