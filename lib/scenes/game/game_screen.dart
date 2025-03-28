@@ -13,33 +13,34 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   final GyroController gyroController = GyroController();
-  final double tolerance = 50.0; // 当たり判定の許容範囲
+  final int targetCount = 5; // 当たり判定の許容範囲
 
   @override
   void initState() {
     super.initState();
     gyroController.initGyro();
+    // gyroController.generateMultipleTargets(context, targetCount);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    gyroController.generateNewTarget(context);
+    gyroController.generateMultipleTargets(context, targetCount);
   }
 
-  void checkHit() {
-    double centerX = MediaQuery.of(context).size.width / 2;
-    double centerY = MediaQuery.of(context).size.height / 2;
+  // void checkHit() {
+  //   double centerX = MediaQuery.of(context).size.width / 2;
+  //   double centerY = MediaQuery.of(context).size.height / 2;
 
-    if ((gyroController.targetX - centerX).abs() < tolerance &&
-        (gyroController.targetY - centerY).abs() < tolerance) {
-      print('Hit! (${gyroController.targetX}, ${gyroController.targetY})');
-      gyroController.generateNewTarget(context);
-    } else {
-      print('Miss! (${gyroController.targetX}, ${gyroController.targetY})');
-    }
-    setState(() {});
-  }
+  //   if ((gyroController.targetX - centerX).abs() < tolerance &&
+  //       (gyroController.targetY - centerY).abs() < tolerance) {
+  //     print('Hit! (${gyroController.targetX}, ${gyroController.targetY})');
+  //     gyroController.generateNewTarget(context);
+  //   } else {
+  //     print('Miss! (${gyroController.targetX}, ${gyroController.targetY})');
+  //   }
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +57,11 @@ class _GameScreenState extends State<GameScreen> {
         ),
         body: Stack(
           children: [
+            ...gyroController.targets.map((target) => TargetWidget(
+                  x: target.dx,
+                  y: target.dy,
+                )),
             // 的ウィジェット
-            TargetWidget(
-              x: gyroController.targetX,
-              y: gyroController.targetY,
-            ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +75,7 @@ class _GameScreenState extends State<GameScreen> {
 
                   // Shootボタン
                   ElevatedButton(
-                    onPressed: checkHit,
+                    onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(
