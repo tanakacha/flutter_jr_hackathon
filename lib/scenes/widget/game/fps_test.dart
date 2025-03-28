@@ -202,27 +202,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // threeJs.scene.add(box);
       boxes.add(box);
     }
-
-    // // 的の設定
-    // final targetGeometry = three.PlaneGeometry(5, 32); // 半径5の円形
-    // final targetMaterial = three.MeshBasicMaterial.fromMap({
-    //   'color': 0xff0000, // 赤色
-    //   'side': three.DoubleSide, // 両面を描画
-    // });
-
-    // final target = three.Mesh(targetGeometry, targetMaterial);
-
-    // // 的をプレイヤーの前方に配置
-    // three.Vector3 targetPosition = three.Vector3()
-    //   ..setFrom(threeJs.camera.position)
-    //   ..addScaled(getForwardVector(), 20.0); // プレイヤーの前方20ユニット
-    // target.position.setFrom(targetPosition);
-
-    // // 的をシーンに追加
-    // threeJs.scene.add(target);
-    // objects.add(target); // 的をオブジェクトリストに追加
-
-    // 的のモデルを読み込む
+    //的の設置
     for (int i = 0; i < 10; i++) {
       await loadTargetModel();
     }
@@ -254,7 +234,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       three.Vector3 forward = getForwardVector();
       // 的の位置を設定
       double randomDistance =
-          3.0 + math.Random().nextDouble() * 2.0; // 3.0から5.0のランダムな距離
+          30 + math.Random().nextDouble() * 20; // 3.0から5.0のランダムな距離
       // obj.position
       //     .setFrom(threeJs.camera.position)
       //     .addScaled(getForwardVector(), randomDistance);
@@ -263,8 +243,10 @@ class _FPSGamePageState extends State<FPSGameTest> {
         ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
 
       // X・Y方向にランダムにオフセット
-      double offsetX = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
-      double offsetY = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
+
+      double offsetX = (math.Random().nextDouble() * 40) *
+          (math.Random().nextBool() ? 1 : -1); // -20.0 ～ 20.0
+      double offsetY = (math.Random().nextDouble() * 10 + 10); // 20.0 ～ 40.0
       targetPosition.x += offsetX;
       targetPosition.y += offsetY;
 
@@ -272,12 +254,9 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // obj.position.x += (math.Random().nextDouble() * 2 - 1).floor() * 2 + 4;
       // obj.position.y += (math.Random().nextDouble() * 2).floor() * 2 + 4;
       // obj.position.z += randomDistance = 3 + math.Random().nextDouble() * 2.0;
-      obj.scale.setValues(0.01, 0.01, 0.01);
+      obj.scale.setValues(0.1, 0.1, 0.1);
       obj.lookAt(threeJs.camera.position);
 
-      // 的の回転をカメラの方向に向ける
-      obj.lookAt(threeJs.camera.position);
-      obj.scale.setValues(0.01, 0.01, 0.01);
       // 子オブジェクトをトラバースして設定
       obj.traverse((child) {
         if (child is three.Mesh) {
@@ -402,7 +381,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= sphereRadius * sphereRadius) {
+    if (distanceSquared <= 20) {
       print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
