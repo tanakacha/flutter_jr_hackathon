@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/scenes/widget/game/3dgame_widget.dart';
 import 'package:flutter_jr_hackathon/scenes/timer/timer_screen.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
@@ -32,9 +33,9 @@ class GameScreen extends StatelessWidget {
             // Text('z: $z'),
             Expanded(
               flex: 3,
-              child: ThreeDGameWidget(), // 3Dゲーム画面を内蔵
+              child: FPSGameTest(), // 3Dゲーム画面を内蔵
             ),
-           
+
             const SizedBox(height: 20),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,
