@@ -2,6 +2,7 @@ import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_jr_hackathon/route/router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +16,9 @@ void main() async {
   await Alarm.init();
 
   runApp(
-    MyApp(),
+    ProviderScope(
+      child: MyApp(),
+    ),
   );
 }
 
