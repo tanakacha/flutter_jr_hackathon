@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:three_js/three_js.dart' as three;
 import 'package:three_js_geometry/three_js_geometry.dart';
@@ -18,8 +19,10 @@ class SphereData {
 }
 
 class FPSGameTest extends StatefulWidget {
+  final ValueChanged<int> onTargetCountChanged;
   const FPSGameTest({
     super.key,
+    required this.onTargetCountChanged,
   });
 
   @override
@@ -34,6 +37,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   final color = three.Color();
   List<three.Mesh> boxes = [];
   List<three.Object3D> targets = [];
+  int targetCount = 0;
 
   late double radius;
 
@@ -195,11 +199,12 @@ class _FPSGamePageState extends State<FPSGameTest> {
           math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
 
       final box = three.Mesh(boxGeometry, boxMaterial);
-      box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
-      box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
+      box.position.x =
+          (math.Random().nextDouble() * 20 - 10).floor() * 20 + 100;
+      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 100;
+      box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 50;
 
-      // threeJs.scene.add(box);
+      threeJs.scene.add(box);
       boxes.add(box);
     }
     //的の設置
@@ -369,11 +374,16 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
   void handleTargetHit(three.Object3D target, SphereData sphere) {
     // 的をシーンから削除
+    if (threeJs.scene.children.contains(target)) {
+      targetCount++;
+    }
     threeJs.scene.remove(target);
     threeJs.scene.remove(sphere.mesh);
 
-    // 必要に応じてスコアを加算
-    print('スコアを加算しました！');
+    widget.onTargetCountChanged(targetCount);
+    if (targetCount >= 10) {
+      GoRouter.of(context).go('/clear');
+    }
   }
 
   void updateSpheres(double deltaTime) {
