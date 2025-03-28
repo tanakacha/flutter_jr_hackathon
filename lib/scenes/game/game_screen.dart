@@ -72,19 +72,16 @@ class _GameScreenState extends State<GameScreen> {
         ),
         body: Stack(
           children: [
-            ...gyroController.targets.map((target) => TargetWidget(
-                  x: target.dx,
-                  y: target.dy,
-                )),
+            // ...gyroController.targets.map((target) => TargetWidget(
+            //       x: target.dx,
+            //       y: target.dy,
+            //     )),
             // 的ウィジェット
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // const Text('Gyroscope values:'),
-                  // Text('x: ${gyroController.x.toStringAsFixed(2)}'),
-                  // Text('y: ${gyroController.y.toStringAsFixed(2)}'),
-                  // Text('z: ${gyroController.z.toStringAsFixed(2)}'),
+                  
                   const Icon(Icons.adjust, size: 60, color: Colors.blue),
                   const SizedBox(height: 30),
 
@@ -105,18 +102,18 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
 
                   // Resetボタン
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    child: const Text(
-                      'Reset',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {},
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.orange,
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 30, vertical: 15),
+                  //   ),
+                  //   child: const Text(
+                  //     'Reset',
+                  //     style: TextStyle(fontSize: 20, color: Colors.white),
+                  //   ),
+                  // ),
 
                   const SizedBox(height: 20),
 
