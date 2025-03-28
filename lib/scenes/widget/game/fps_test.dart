@@ -355,15 +355,19 @@ class _FPSGamePageState extends State<FPSGameTest> {
     double dx = sphereCenter.x - targetCenter.x;
     double dy = sphereCenter.y - targetCenter.y;
     double dz = (sphereCenter.z - targetCenter.z) * 0.5; // z軸の距離を小さくする
+    //double dz = sphereCenter.z - targetCenter.z; // z軸の距離を小さくする
 
     // 距離の二乗を計算
     double distanceSquared = dx * dx + dy * dy + dz * dz;
+    //double distanceSquared = dy * dy + dz * dz;//距離判定奥行き除く
 
     // 衝突判定
+    //if (dx == 0) {// 玉が的に当たった場合奥行きの判定
     if (distanceSquared <= sphereRadius * sphereRadius) {
       print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
+    //} // 衝突判定
   }
 
   void handleTargetHit(three.Object3D target, SphereData sphere) {
