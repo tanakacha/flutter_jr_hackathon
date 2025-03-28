@@ -32,7 +32,10 @@ class _FPSGamePageState extends State<FPSGameTest> {
   late three.ThreeJS threeJs;
   final vertex = three.Vector3.zero();
   final color = three.Color();
-  List<three.Mesh> objects = [];
+  List<three.Mesh> boxes = [];
+  List<three.Object3D> targets = [];
+
+  late double radius;
 
   // ジャイロスコープのデータを保持
   double yaw = 0.0; // 水平方向の回転
@@ -271,6 +274,9 @@ class _FPSGamePageState extends State<FPSGameTest> {
       obj.scale.setValues(0.01, 0.01, 0.01);
           obj.lookAt(threeJs.camera.position);
 
+      // 的の回転をカメラの方向に向ける
+      obj.lookAt(threeJs.camera.position);
+      obj.scale.setValues(0.01, 0.01, 0.01);
       // 子オブジェクトをトラバースして設定
       obj.traverse((child) {
         if (child is three.Mesh) {
@@ -279,16 +285,33 @@ class _FPSGamePageState extends State<FPSGameTest> {
         }
       });
 
+      targets.add(obj);
+
+      // if (obj.geometry != null) {
+      //   obj.geometry!.computeBoundingSphere(); // 関数として呼び出し
+      //   final boundingSphere = obj.geometry!.boundingSphere;
+      //   if (boundingSphere != null) {
+      //     double baseRadius = boundingSphere.radius;
+
+      //     // スケールを考慮して半径を計算
+      //     radius = boundingSphere.radius * 0.01;
+      //     print('Base radius: $baseRadius, Scale: $radius');
+      //   } else {
+      //     print('Error: boundingSphere is null');
+      //   }
+      // } else {
+      //   print('Error: geometry is null');
+      // }
       // 的をシーンに追加
       threeJs.scene.add(obj);
-      objects.add(obj as three.Mesh); // 的をオブジェクトリストに追加
+      // 的をオブジェクトリストに追加
     } catch (e) {
       print('Error loading target model: $e');
     }
   }
 
   void throwBall() {
-    double sphereRadius = 2;
+    double sphereRadius = 1.0;
     IcosahedronGeometry sphereGeometry = IcosahedronGeometry(sphereRadius, 5);
     three.MeshLambertMaterial sphereMaterial =
         three.MeshLambertMaterial.fromMap({'color': 0xbbbb44});
@@ -332,37 +355,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
     }
   }
 
-  void playerSphereCollision(SphereData sphere) {
-    three.Vector3 center =
-        vector1.add2(playerCollider.start, playerCollider.end).scale(0.5);
-    final sphereCenter = sphere.collider.center;
-    double r = playerCollider.radius + sphere.collider.radius;
-    double r2 = r * r;
-
-    // approximation: player = 3 spheres
-    List<three.Vector3> temp = [
-      playerCollider.start,
-      playerCollider.end,
-      center
-    ];
-    for (three.Vector3 point in temp) {
-      num d2 = point.distanceToSquared(sphereCenter);
-      if (d2 < r2) {
-        three.Vector3 normal = vector1.sub2(point, sphereCenter).normalize();
-        three.Vector3 v1 =
-            vector2.setFrom(normal).scale(normal.dot(playerVelocity));
-        three.Vector3 v2 =
-            vector3.setFrom(normal).scale(normal.dot(sphere.velocity));
-
-        playerVelocity.add(v2).sub(v1);
-        sphere.velocity.add(v1).sub(v2);
-
-        double d = (r - math.sqrt(d2)) / 2;
-        sphereCenter.addScaled(normal, -d);
-      }
-    }
-  }
-
   void spheresCollisions() {
     for (int i = 0, length = spheres.length; i < length; i++) {
       SphereData s1 = spheres[i];
@@ -392,20 +384,51 @@ class _FPSGamePageState extends State<FPSGameTest> {
     }
   }
 
+  void checkCollisionWithTarget(SphereData sphere, three.Object3D target) {
+    // 玉の中心と的の中心を取得
+    three.Vector3 sphereCenter = sphere.collider.center;
+    three.Vector3 targetCenter = target.position;
+
+    // 玉の半径と的の半径を設定
+    double sphereRadius = sphere.collider.radius;
+
+    // 距離を計算（z軸を別途考慮）
+    double dx = sphereCenter.x - targetCenter.x;
+    double dy = sphereCenter.y - targetCenter.y;
+    double dz = (sphereCenter.z - targetCenter.z) * 0.5; // z軸の距離を小さくする
+
+    // 距離の二乗を計算
+    double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+    // 衝突判定
+    if (distanceSquared <= sphereRadius * sphereRadius) {
+      print('Hit! 玉が的に当たりました！');
+      handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
+    }
+  }
+
+  void handleTargetHit(three.Object3D target, SphereData sphere) {
+    // 的をシーンから削除
+    threeJs.scene.remove(target);
+    threeJs.scene.remove(sphere.mesh);
+    // 的をtargetsリストから削除
+    targets.remove(target);
+
+    // 必要に応じてスコアを加算
+    print('スコアを加算しました！');
+  }
+
   void updateSpheres(double deltaTime) {
     for (final sphere in spheres) {
       sphere.collider.center.addScaled(sphere.velocity, deltaTime);
       OctreeData? result = worldOctree.sphereIntersect(sphere.collider);
       if (result != null) {
         sphere.collider.center.add(result.normal.scale(result.depth));
-      } else {
-        // sphere.velocity.y -= gravity * deltaTime;
       }
-
-      // double damping = math.exp(-1.5 * deltaTime) - 1;
-      // sphere.velocity.addScaled(sphere.velocity, damping);
-
-      playerSphereCollision(sphere);
+      // 玉と的の当たり判定をチェック
+      for (final target in targets) {
+        checkCollisionWithTarget(sphere, target);
+      }
     }
 
     spheresCollisions();
