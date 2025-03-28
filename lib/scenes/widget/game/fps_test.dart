@@ -98,7 +98,9 @@ class _FPSGamePageState extends State<FPSGameTest> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-      children: [threeJs.build()],
+      children: [
+        threeJs.build(),
+      ],
     ));
   }
 
@@ -230,12 +232,12 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // 的の位置を設定（カメラの前方5ユニットに配置）
       three.Vector3 targetPosition = three.Vector3()
         ..setFrom(threeJs.camera.position)
-        ..addScaled(forwardVector, 5.0); // カメラの前方5ユニット
+        ..addScaled(forwardVector, 50); // カメラの前方5ユニット
       obj.position.setFrom(targetPosition);
 
       // 的の回転をカメラの方向に向ける
       obj.lookAt(threeJs.camera.position);
-      obj.scale.setValues(0.01, 0.01, 0.01);
+      obj.scale.setValues(0.1, 0.1, 0.1);
       // 子オブジェクトをトラバースして設定
       obj.traverse((child) {
         if (child is three.Mesh) {
@@ -360,7 +362,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= sphereRadius * sphereRadius) {
+    if (distanceSquared <= 100) {
       print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
