@@ -200,7 +200,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
 
       // threeJs.scene.add(box);
-      objects.add(box);
+      boxes.add(box);
     }
 
     // // 的の設定
@@ -223,7 +223,8 @@ class _FPSGamePageState extends State<FPSGameTest> {
     // objects.add(target); // 的をオブジェクトリストに追加
 
     // 的のモデルを読み込む
-    for (int i = 0; i < 10; i++) {await loadTargetModel();
+    for (int i = 0; i < 10; i++) {
+      await loadTargetModel();
     }
 
     threeJs.addAnimationEvent((dt) {
@@ -260,19 +261,19 @@ class _FPSGamePageState extends State<FPSGameTest> {
       three.Vector3 targetPosition = three.Vector3()
         ..setFrom(threeJs.camera.position)
         ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
-      
+
       // X・Y方向にランダムにオフセット
-    double offsetX = (math.Random().nextDouble() * 4 - 2);  // -2.0 ～ 2.0
-    double offsetY = (math.Random().nextDouble() * 4 - 2);  // -2.0 ～ 2.0
-    targetPosition.x += offsetX;
-    targetPosition.y += offsetY;
-    
+      double offsetX = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
+      double offsetY = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
+      targetPosition.x += offsetX;
+      targetPosition.y += offsetY;
+
       obj.position.setFrom(targetPosition);
       // obj.position.x += (math.Random().nextDouble() * 2 - 1).floor() * 2 + 4;
       // obj.position.y += (math.Random().nextDouble() * 2).floor() * 2 + 4;
       // obj.position.z += randomDistance = 3 + math.Random().nextDouble() * 2.0;
       obj.scale.setValues(0.01, 0.01, 0.01);
-          obj.lookAt(threeJs.camera.position);
+      obj.lookAt(threeJs.camera.position);
 
       // 的の回転をカメラの方向に向ける
       obj.lookAt(threeJs.camera.position);
