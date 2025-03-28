@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
 import 'package:flutter_jr_hackathon/widget/target_widget.dart';
 import 'package:flutter_jr_hackathon/widget/timer_widget.dart';
@@ -72,21 +73,32 @@ class _GameScreenState extends State<GameScreen> {
         ),
         body: Stack(
           children: [
-            ...gyroController.targets.map((target) => TargetWidget(
-                  x: target.dx,
-                  y: target.dy,
-                )),
+            // ...gyroController.targets.map((target) => TargetWidget(
+            //       x: target.dx,
+            //       y: target.dy,
+            //     )),
             // 的ウィジェット
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // const Text('Gyroscope values:'),
-                  // Text('x: ${gyroController.x.toStringAsFixed(2)}'),
-                  // Text('y: ${gyroController.y.toStringAsFixed(2)}'),
-                  // Text('z: ${gyroController.z.toStringAsFixed(2)}'),
-                  const Icon(Icons.adjust, size: 60, color: Colors.blue),
+                  // const Icon(Icons.adjust, size: 60, color: Colors.blue),
                   const SizedBox(height: 30),
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      children: [
+                        FPSGameTest(), // 3Dゲーム画面を内蔵
+                        Center(
+                          child: Icon(
+                            Icons.adjust,
+                            size: 60,
+                            color: Colors.blue,
+                          ), // アイコンを中央に配置
+                        ),
+                      ],
+                    ),
+                  ),
 
                   // Shootボタン
                   ElevatedButton(
@@ -105,20 +117,20 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 20),
 
                   // Resetボタン
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    child: const Text(
-                      'Reset',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {},
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.orange,
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 30, vertical: 15),
+                  //   ),
+                  //   child: const Text(
+                  //     'Reset',
+                  //     style: TextStyle(fontSize: 20, color: Colors.white),
+                  //   ),
+                  // ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
                   // 設定画面へボタン
                   ElevatedButton(

@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   go_router: ^14.8.1
   sensors_plus: ^6.1.1
+  three_js: ^0.0.7
+  three_js_geometry: ^0.0.2
+  three_js_objects: ^0.0.3
   flutter_datetime_picker_plus: ^2.2.0
   riverpod_annotation: ^2.6.1
   flutter_riverpod: ^2.6.1
