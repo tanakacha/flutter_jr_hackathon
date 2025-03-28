@@ -270,7 +270,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   }
 
   void throwBall() {
-    double sphereRadius = 2;
+    double sphereRadius = 1.0;
     IcosahedronGeometry sphereGeometry = IcosahedronGeometry(sphereRadius, 5);
     three.MeshLambertMaterial sphereMaterial =
         three.MeshLambertMaterial.fromMap({'color': 0xbbbb44});
@@ -351,20 +351,25 @@ class _FPSGamePageState extends State<FPSGameTest> {
     // 玉の半径と的の半径を設定
     double sphereRadius = sphere.collider.radius;
 
-    // 距離を計算
-    double distance = sphereCenter.distanceTo(targetCenter);
+    // 距離を計算（z軸を別途考慮）
+    double dx = sphereCenter.x - targetCenter.x;
+    double dy = sphereCenter.y - targetCenter.y;
+    double dz = (sphereCenter.z - targetCenter.z) * 0.5; // z軸の距離を小さくする
+
+    // 距離の二乗を計算
+    double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distance <= sphereRadius + 10) {
+    if (distanceSquared <= sphereRadius * sphereRadius) {
       print('Hit! 玉が的に当たりました！');
-      handleTargetHit(target); // 衝突時の処理を呼び出し
+      handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
   }
 
-  void handleTargetHit(three.Object3D target) {
+  void handleTargetHit(three.Object3D target, SphereData sphere) {
     // 的をシーンから削除
     threeJs.scene.remove(target);
-
+    threeJs.scene.remove(sphere.mesh);
     // 的をtargetsリストから削除
     targets.remove(target);
 
