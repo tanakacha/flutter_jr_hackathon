@@ -251,9 +251,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       targetPosition.y += offsetY;
 
       obj.position.setFrom(targetPosition);
-      // obj.position.x += (math.Random().nextDouble() * 2 - 1).floor() * 2 + 4;
-      // obj.position.y += (math.Random().nextDouble() * 2).floor() * 2 + 4;
-      // obj.position.z += randomDistance = 3 + math.Random().nextDouble() * 2.0;
+
       obj.scale.setValues(0.1, 0.1, 0.1);
       obj.lookAt(threeJs.camera.position);
 
@@ -267,21 +265,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
       targets.add(obj);
 
-      // if (obj.geometry != null) {
-      //   obj.geometry!.computeBoundingSphere(); // 関数として呼び出し
-      //   final boundingSphere = obj.geometry!.boundingSphere;
-      //   if (boundingSphere != null) {
-      //     double baseRadius = boundingSphere.radius;
-
-      //     // スケールを考慮して半径を計算
-      //     radius = boundingSphere.radius * 0.01;
-      //     print('Base radius: $baseRadius, Scale: $radius');
-      //   } else {
-      //     print('Error: boundingSphere is null');
-      //   }
-      // } else {
-      //   print('Error: geometry is null');
-      // }
       // 的をシーンに追加
       threeJs.scene.add(obj);
       // 的をオブジェクトリストに追加
@@ -391,8 +374,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
     // 的をシーンから削除
     threeJs.scene.remove(target);
     threeJs.scene.remove(sphere.mesh);
-    // 的をtargetsリストから削除
-    targets.remove(target);
 
     // 必要に応じてスコアを加算
     print('スコアを加算しました！');
