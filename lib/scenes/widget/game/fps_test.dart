@@ -6,6 +6,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:three_js/three_js.dart' as three;
 import 'package:three_js_geometry/three_js_geometry.dart';
 import 'package:three_js_objects/three_js_objects.dart';
+import 'dart:math';
 
 class SphereData {
   SphereData(
@@ -198,11 +199,33 @@ class _FPSGamePageState extends State<FPSGameTest> {
       box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
       box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
 
-      threeJs.scene.add(box);
+      // threeJs.scene.add(box);
       boxes.add(box);
     }
 
-    await loadTargetModel();
+    // // 的の設定
+    // final targetGeometry = three.PlaneGeometry(5, 32); // 半径5の円形
+    // final targetMaterial = three.MeshBasicMaterial.fromMap({
+    //   'color': 0xff0000, // 赤色
+    //   'side': three.DoubleSide, // 両面を描画
+    // });
+
+    // final target = three.Mesh(targetGeometry, targetMaterial);
+
+    // // 的をプレイヤーの前方に配置
+    // three.Vector3 targetPosition = three.Vector3()
+    //   ..setFrom(threeJs.camera.position)
+    //   ..addScaled(getForwardVector(), 20.0); // プレイヤーの前方20ユニット
+    // target.position.setFrom(targetPosition);
+
+    // // 的をシーンに追加
+    // threeJs.scene.add(target);
+    // objects.add(target); // 的をオブジェクトリストに追加
+
+    // 的のモデルを読み込む
+    for (int i = 0; i < 10; i++) {
+      await loadTargetModel();
+    }
 
     threeJs.addAnimationEvent((dt) {
       double deltaTime = math.min(0.05, dt) / stepsPerFrame;
@@ -223,15 +246,34 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // モデルを非同期でロード
       final obj = (await loader
           .fromAsset('assets/models/target.obj'))!; // 修正: `gltf`ではなく`obj`
+      if (obj == null) {
+        print('モデルの読み込みに失敗しました');
+        return;
+      }
 
-      // カメラの前方方向を取得
-      three.Vector3 forwardVector = getForwardVector();
-
-      // 的の位置を設定（カメラの前方5ユニットに配置）
+      three.Vector3 forward = getForwardVector();
+      // 的の位置を設定
+      double randomDistance =
+          3.0 + math.Random().nextDouble() * 2.0; // 3.0から5.0のランダムな距離
+      // obj.position
+      //     .setFrom(threeJs.camera.position)
+      //     .addScaled(getForwardVector(), randomDistance);
       three.Vector3 targetPosition = three.Vector3()
         ..setFrom(threeJs.camera.position)
-        ..addScaled(forwardVector, 5.0); // カメラの前方5ユニット
+        ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
+
+      // X・Y方向にランダムにオフセット
+      double offsetX = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
+      double offsetY = (math.Random().nextDouble() * 4 - 2); // -2.0 ～ 2.0
+      targetPosition.x += offsetX;
+      targetPosition.y += offsetY;
+
       obj.position.setFrom(targetPosition);
+      // obj.position.x += (math.Random().nextDouble() * 2 - 1).floor() * 2 + 4;
+      // obj.position.y += (math.Random().nextDouble() * 2).floor() * 2 + 4;
+      // obj.position.z += randomDistance = 3 + math.Random().nextDouble() * 2.0;
+      obj.scale.setValues(0.01, 0.01, 0.01);
+      obj.lookAt(threeJs.camera.position);
 
       // 的の回転をカメラの方向に向ける
       obj.lookAt(threeJs.camera.position);

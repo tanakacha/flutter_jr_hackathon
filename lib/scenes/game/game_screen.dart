@@ -105,13 +105,18 @@ class _GameScreenState extends State<GameScreen> {
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      elevation: 8,
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 4,
+                      ),
+                      backgroundColor: const Color.fromARGB(177, 255, 0, 60),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 30, vertical: 15),
                     ),
                     child: const Text(
                       'Shoot',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
                     ),
                   ),
 
@@ -144,7 +149,7 @@ class _GameScreenState extends State<GameScreen> {
                           horizontal: 30, vertical: 15),
                     ),
                     child: const Text(
-                      '設定画面へ',
+                      '設定画面へ➡',
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
                   ),
