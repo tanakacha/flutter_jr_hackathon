@@ -20,14 +20,13 @@ class AppRouter {
       ),
       GoRoute(
         path: '/game',
-        builder: (context, state) => GameScreen(
-            // アラーム停止のため準備中
-            // alarmSettings: state.extra as AlarmSettings,
-            ),
+        builder: (context, state) => GameScreen(),
       ),
       GoRoute(
         path: '/clear',
         builder: (context, state) => ClearScreen(),
+        // context.go('/clear', extra: alarmId);
+
       ),
     ],
   );

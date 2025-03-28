@@ -46,6 +46,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   Future<void> loadAlarms() async {
     final updateAlarms = await Alarm.getAlarms();
     updateAlarms.sort((a, b) => a.dateTime.isBefore(b.dateTime) ? 0 : 1);
+    if (!mounted) return;
     setState(() {
       alarms = updateAlarms;
     });
@@ -62,7 +63,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
     //   }),
     // );
     context.go('/check'); // 確認画面に遷移する
-    unawaited(loadAlarms());
+    if (mounted) {
+      unawaited(loadAlarms());
+    }
   }
 
   // フル
@@ -82,6 +85,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
     );
 
     if (res != null && res == true) unawaited(loadAlarms());
+  }
+
+  @override
+  void dispose() {
+    ringSubscription?.cancel();
+    updateSubscription?.cancel();
+    super.dispose();
   }
 
   @override
