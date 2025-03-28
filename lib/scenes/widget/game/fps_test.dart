@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:three_js/three_js.dart' as three;
 import 'package:three_js_geometry/three_js_geometry.dart';
@@ -18,8 +19,10 @@ class SphereData {
 }
 
 class FPSGameTest extends StatefulWidget {
+  final ValueChanged<int> onTargetCountChanged;
   const FPSGameTest({
     super.key,
+    required this.onTargetCountChanged,
   });
 
   @override
@@ -34,6 +37,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   final color = three.Color();
   List<three.Mesh> boxes = [];
   List<three.Object3D> targets = [];
+  int targetCount = 0;
 
   late double radius;
 
@@ -195,11 +199,12 @@ class _FPSGamePageState extends State<FPSGameTest> {
           math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
 
       final box = three.Mesh(boxGeometry, boxMaterial);
-      box.position.x = (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 40;
-      box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 20;
+      box.position.x =
+          (math.Random().nextDouble() * 20 - 10).floor() * 20 + 100;
+      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 100;
+      box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 50;
 
-      // threeJs.scene.add(box);
+      threeJs.scene.add(box);
       boxes.add(box);
     }
     //的の設置
@@ -211,7 +216,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
       double deltaTime = math.min(0.05, dt) / stepsPerFrame;
       if (deltaTime != 0) {
         for (int i = 0; i < stepsPerFrame; i++) {
-          controls(deltaTime);
           updateSpheres(deltaTime);
           teleportPlayerIfOob();
         }
@@ -235,9 +239,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // 的の位置を設定
       double randomDistance =
           30 + math.Random().nextDouble() * 20; // 3.0から5.0のランダムな距離
-      // obj.position
-      //     .setFrom(threeJs.camera.position)
-      //     .addScaled(getForwardVector(), randomDistance);
+
       three.Vector3 targetPosition = three.Vector3()
         ..setFrom(threeJs.camera.position)
         ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
@@ -364,7 +366,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= 20) {
+    if (distanceSquared <= 25.0) {
       print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
@@ -372,11 +374,16 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
   void handleTargetHit(three.Object3D target, SphereData sphere) {
     // 的をシーンから削除
+    if (threeJs.scene.children.contains(target)) {
+      targetCount++;
+    }
     threeJs.scene.remove(target);
     threeJs.scene.remove(sphere.mesh);
 
-    // 必要に応じてスコアを加算
-    print('スコアを加算しました！');
+    widget.onTargetCountChanged(targetCount);
+    if (targetCount >= 10) {
+      GoRouter.of(context).go('/clear');
+    }
   }
 
   void updateSpheres(double deltaTime) {
@@ -412,29 +419,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
     playerDirection.normalize();
     playerDirection.cross(threeJs.camera.up);
     return playerDirection;
-  }
-
-  void controls(double deltaTime) {
-    // gives a bit of air control
-    double speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
-
-    if (keyStates[LogicalKeyboardKey.arrowUp]!) {
-      playerVelocity.add(getForwardVector().scale(speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowDown]!) {
-      playerVelocity.add(getForwardVector().scale(-speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowLeft]!) {
-      playerVelocity.add(getSideVector().scale(-speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowRight]!) {
-      playerVelocity.add(getSideVector().scale(speedDelta));
-    }
-    if (playerOnFloor) {
-      if (keyStates[LogicalKeyboardKey.space]!) {
-        playerVelocity.y = 15;
-      }
-    }
   }
 
   void teleportPlayerIfOob() {
