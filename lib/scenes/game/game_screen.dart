@@ -56,20 +56,6 @@ class _GameScreenState extends State<GameScreen> {
               onPressed: () {},
             ),
             const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.adjust,
-                  size: 32,
-                  color: Colors.amber,
-                ),
-                Text(
-                  '×score/10',
-                  style: TextStyle(fontSize: 32),
-                ),
-              ],
-            ),
           ],
         ),
         body: Stack(
@@ -116,58 +102,25 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                     child: const Text(
                       'Shoot',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // Resetボタン
-                  // ElevatedButton(
-                  //   onPressed: () {},
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.orange,
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 30, vertical: 15),
-                  //   ),
-                  //   child: const Text(
-                  //     'Reset',
-                  //     style: TextStyle(fontSize: 20, color: Colors.white),
-                  //   ),
-                  // ),
-
-                  // const SizedBox(height: 20),
-
-                  // 設定画面へボタン
-                  ElevatedButton(
-                    onPressed: () {
-                      context.go('/');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    child: const Text(
-                      '設定画面へ➡',
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                    ),
-                  ),
-                  // クリア画面へボタン
-                  ElevatedButton(
-                    onPressed: () {
-                      // Alarm.stop(widget.alarmSettings.id);
-                      context.go('/clear');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                    ),
-                    child: const Text(
-                      'クリア画面へ',
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.adjust,
+                        size: 32,
+                        color: Colors.amber,
+                      ),
+                      Text(
+                        '×score/10',
+                        style: TextStyle(fontSize: 32),
+                      ),
+                    ],
                   ),
                 ],
               ),

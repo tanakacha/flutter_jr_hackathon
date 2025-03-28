@@ -211,7 +211,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
       double deltaTime = math.min(0.05, dt) / stepsPerFrame;
       if (deltaTime != 0) {
         for (int i = 0; i < stepsPerFrame; i++) {
-          controls(deltaTime);
           updateSpheres(deltaTime);
           teleportPlayerIfOob();
         }
@@ -235,9 +234,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // 的の位置を設定
       double randomDistance =
           30 + math.Random().nextDouble() * 20; // 3.0から5.0のランダムな距離
-      // obj.position
-      //     .setFrom(threeJs.camera.position)
-      //     .addScaled(getForwardVector(), randomDistance);
+
       three.Vector3 targetPosition = three.Vector3()
         ..setFrom(threeJs.camera.position)
         ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
@@ -412,29 +409,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
     playerDirection.normalize();
     playerDirection.cross(threeJs.camera.up);
     return playerDirection;
-  }
-
-  void controls(double deltaTime) {
-    // gives a bit of air control
-    double speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
-
-    if (keyStates[LogicalKeyboardKey.arrowUp]!) {
-      playerVelocity.add(getForwardVector().scale(speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowDown]!) {
-      playerVelocity.add(getForwardVector().scale(-speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowLeft]!) {
-      playerVelocity.add(getSideVector().scale(-speedDelta));
-    }
-    if (keyStates[LogicalKeyboardKey.arrowRight]!) {
-      playerVelocity.add(getSideVector().scale(speedDelta));
-    }
-    if (playerOnFloor) {
-      if (keyStates[LogicalKeyboardKey.space]!) {
-        playerVelocity.y = 15;
-      }
-    }
   }
 
   void teleportPlayerIfOob() {
