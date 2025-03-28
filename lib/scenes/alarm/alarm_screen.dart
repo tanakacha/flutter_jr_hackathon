@@ -11,7 +11,6 @@ import 'package:flutter_jr_hackathon/scenes/alarm/components/ring_screen.dart';
 import 'package:flutter_jr_hackathon/services/notification.dart';
 import 'package:flutter_jr_hackathon/services/permission.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:async';
 
 class AlarmScreen extends StatefulWidget {
   const AlarmScreen({super.key});
@@ -21,7 +20,6 @@ class AlarmScreen extends StatefulWidget {
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
-  // まだ使ってない
   List<AlarmSettings> alarms = [];
   Notifications? notifications;
 
@@ -32,7 +30,6 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   void initState() {
     super.initState();
-    // permission.dartの中身 ここだけコメントアウト外すと例外が発生する
     AlarmPermissions.checkNotificationPermission().then(
       (_) => AlarmPermissions.checkAndroidScheduleExactAlarmPermission(),
     );
@@ -58,13 +55,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
   Future<void> ringingAlarmsChanged(AlarmSet alarms) async {
     if (alarms.alarms.isEmpty) return;
     // 仮の確認画面用
-    await Navigator.push(
-      context,
-      MaterialPageRoute<void>(builder: (context) {
-        return RingScreen(alarmSettings: alarms.alarms.first);
-      }),
-    );
-    // context.go('/game'); // ゲーム画面用、確認画面に変更する
+    // await Navigator.push(
+    //   context,
+    //   MaterialPageRoute<void>(builder: (context) {
+    //     return RingScreen(alarmSettings: alarms.alarms.first);
+    //   }),
+    // );
+    context.go('/check'); // 確認画面に遷移する
     unawaited(loadAlarms());
   }
 
