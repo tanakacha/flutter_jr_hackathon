@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
 import 'package:flutter_jr_hackathon/widget/target_widget.dart';
 import 'package:flutter_jr_hackathon/widget/timer_widget.dart';
@@ -81,9 +82,23 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  
-                  const Icon(Icons.adjust, size: 60, color: Colors.blue),
+                  // const Icon(Icons.adjust, size: 60, color: Colors.blue),
                   const SizedBox(height: 30),
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      children: [
+                        FPSGameTest(), // 3Dゲーム画面を内蔵
+                        Center(
+                          child: Icon(
+                            Icons.adjust,
+                            size: 60,
+                            color: Colors.blue,
+                          ), // アイコンを中央に配置
+                        ),
+                      ],
+                    ),
+                  ),
 
                   // Shootボタン
                   ElevatedButton(
@@ -115,7 +130,7 @@ class _GameScreenState extends State<GameScreen> {
                   //   ),
                   // ),
 
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
 
                   // 設定画面へボタン
                   ElevatedButton(
