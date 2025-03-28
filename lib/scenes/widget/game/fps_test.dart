@@ -366,7 +366,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= 20) {
+    if (distanceSquared <= 25.0) {
       print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
