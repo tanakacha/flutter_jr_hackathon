@@ -152,6 +152,8 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    late int gameDifficulty = 3;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: Column(
@@ -199,21 +201,21 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // 使い慣れているアラームはデフォルトでonだから不要かも
-              Text('アラーム音を繰り返す'),
-              CupertinoSwitch(
-                  value: loopAudio,
-                  onChanged: (value) {
-                    setState(() {
-                      loopAudio = value;
-                      print(loopAudio);
-                    });
-                  }),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     // 使い慣れているアラームはデフォルトでonだから不要かも
+          //     Text('アラーム音を繰り返す'),
+          //     CupertinoSwitch(
+          //         value: loopAudio,
+          //         onChanged: (value) {
+          //           setState(() {
+          //             loopAudio = value;
+          //             print(loopAudio);
+          //           });
+          //         }),
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -243,6 +245,34 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                 onChanged: (value) {
                   setState(() {
                     assetAudio = value!;
+                  });
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('起床の逼迫度'),
+              DropdownButton(
+                value: gameDifficulty,
+                items: [
+                  DropdownMenuItem<int?>(
+                    value: 3,
+                    child: Text('ぼちぼち'),
+                  ),
+                  DropdownMenuItem<int?>(
+                    value: 5,
+                    child: Text('可能な限り'),
+                  ),
+                  DropdownMenuItem<int?>(
+                    value: 10,
+                    child: Text('絶対に'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    gameDifficulty = value!;
                   });
                 },
               ),
@@ -288,6 +318,24 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                 ],
               ),
             ),
+          // Text('起床の重要度'),
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: [
+          //     ElevatedButton(
+          //       onPressed: () {},
+          //       child: Text('初級(ゆっくり)'),
+          //     ),
+          //     ElevatedButton(
+          //       onPressed: () {},
+          //       child: Text('中級(ぼちぼち)'),
+          //     ),
+          //     ElevatedButton(
+          //       onPressed: () {},
+          //       child: Text('上級(絶対起床)'),
+          //     ),
+          //   ],
+          // ),
           Row(),
         ],
       ),
