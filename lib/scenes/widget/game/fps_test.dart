@@ -225,6 +225,24 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
   Future<void> loadTargetModel() async {
     final loader = three.OBJLoader(); // モデルのパスを設定
+    final textureLoader = three.TextureLoader();
+    late three.Texture texture;
+    textureLoader.flipY = false;
+    texture = (await textureLoader.fromAsset('assets/models/target.png'))!;
+    texture.magFilter = three.LinearFilter;
+    texture.minFilter = three.LinearMipmapLinearFilter;
+    texture.generateMipmaps = true;
+    texture.needsUpdate = true;
+    texture.flipY = true; // this flipY is only for web
+    // final materials = await mtlLoader.fromAsset('assets/models/blank.mtl');
+    // if (materials == null) {
+    //   print('Error: Blank.mtl file not found or empty.');
+    //   return;
+    // }
+    // materials!.preload(); // マテリアルを準備
+
+    // OBJLoaderにマテリアルを設定
+    // loader.setMaterials(materials);
 
     try {
       // モデルを非同期でロード
@@ -260,6 +278,21 @@ class _FPSGamePageState extends State<FPSGameTest> {
       // 子オブジェクトをトラバースして設定
       obj.traverse((child) {
         if (child is three.Mesh) {
+          // 固定色を設定
+          final outerMaterial = three.MeshLambertMaterial.fromMap({
+            'color': 0xFF0000, // 赤色
+            'side': three.FrontSide, // 外側の面
+          });
+
+          final innerMaterial = three.MeshLambertMaterial.fromMap({
+            'color': 0xFFFFFF, // 白色
+            'side': three.BackSide, // 内側の面
+          });
+
+          // 外側のマテリアルを適用
+          child.material?.map = texture;
+
+          // 必要に応じて内側のマテリアルを適用
           child.castShadow = true;
           child.receiveShadow = true;
         }
