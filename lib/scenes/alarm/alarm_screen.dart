@@ -168,12 +168,13 @@ class _AlarmScreenState extends State<AlarmScreen> {
               //     context.go('/game');
               //   },
               // ),
-              ElevatedButton(
-                child: Text("クリアへ"),
-                onPressed: () {
-                  context.go('/clear');
-                },
-              ),
+              // ElevatedButton(
+              //   child: Text("クリアへ"),
+              //   onPressed: () {
+              //     context.go('/clear');
+              //   },
+              // ),
+              Gap(0),
             ],
           ),
         ),
