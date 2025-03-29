@@ -10,6 +10,7 @@ import 'package:flutter_jr_hackathon/scenes/alarm/components/edit_alarm_screen.d
 import 'package:flutter_jr_hackathon/scenes/alarm/components/ring_screen.dart';
 import 'package:flutter_jr_hackathon/services/notification.dart';
 import 'package:flutter_jr_hackathon/services/permission.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class AlarmScreen extends StatefulWidget {
@@ -103,49 +104,64 @@ class _AlarmScreenState extends State<AlarmScreen> {
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Expanded(
+              // Gap(0),
+              SizedBox(
+                height: 80, // AlarmTile の高さに合わせる
                 child: alarms.isNotEmpty
-                    ? ListView.separated(
-                        itemCount: alarms.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          return AlarmTile(
-                            key: Key(alarms[index].id.toString()),
+                    ? ListView(
+                        physics: NeverScrollableScrollPhysics(), // スクロールを無効にする
+                        children: [
+                          AlarmTile(
+                            key: Key(alarms[0].id.toString()),
                             title: TimeOfDay(
-                                    hour: alarms[index].dateTime.hour,
-                                    minute: alarms[index].dateTime.minute)
+                                    hour: alarms[0].dateTime.hour,
+                                    minute: alarms[0].dateTime.minute)
                                 .format(context),
                             onPressed: () {
-                              navigateToAlarmScreen(alarms[index]);
+                              navigateToAlarmScreen(alarms[0]);
                             },
                             onDismissed: () {
-                              Alarm.stop(alarms[index].id)
+                              Alarm.stop(alarms[0].id)
                                   .then((_) => loadAlarms());
                             },
-                          );
-                        },
+                          ),
+                        ],
                       )
-                    : Center(
-                        child: Text(
-                          'アラームなし',
-                          style: Theme.of(context).textTheme.titleMedium,
+                    : ElevatedButton(
+                        onPressed: () {
+                          navigateToAlarmScreen(null);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.alarm_add_rounded, size: 33),
+                            Text('新規めざまし作成'),
+                            Gap(10),
+                          ],
                         ),
                       ),
+                // Center(
+                //     child: Text(
+                //       'アラームなし',
+                //       style: Theme.of(context).textTheme.titleMedium,
+                //     ),
+                //   ),
               ),
-              FloatingActionButton(
-                onPressed: () {
-                  navigateToAlarmScreen(null);
-                },
-                child: Icon(Icons.alarm_add_rounded, size: 33),
-              ),
-              ElevatedButton(
-                child: Text("確認画面へ"),
-                onPressed: () {
-                  context.go('/check');
-                },
-              ),
+              // FloatingActionButton(
+              //   onPressed: () {
+              //     navigateToAlarmScreen(null);
+              //   },
+              //   child: Icon(Icons.alarm_add_rounded, size: 33),
+              // ),
+              // ElevatedButton(
+              //   child: Text("確認画面へ"),
+              //   onPressed: () {
+              //     context.go('/check');
+              //   },
+              // ),
+              // ゲームへというボタンをコメントアウトするとUIが崩れるのでその時は代わりに"Gap(0),"を書いてください、"Row(),"とかでも構いません
               ElevatedButton(
                 child: Text("ゲームへ"),
                 onPressed: () {
