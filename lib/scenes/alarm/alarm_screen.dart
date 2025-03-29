@@ -161,11 +161,17 @@ class _AlarmScreenState extends State<AlarmScreen> {
               //     context.go('/check');
               //   },
               // ),
-              // ゲームへというボタンをコメントアウトするとUIが崩れるのでその時は代わりに"Gap(0),"を書いてください、"Row(),"とかでも構いません
+              // 〇〇へという遷移ボタンをコメントアウトするとUIが崩れるのでその時は代わりに"Gap(0),"を書いてください、"Row(),"とかでもなんでも構いません、アラーム画面のUIが気になる時はガンガン変更してください
+              // ElevatedButton(
+              //   child: Text("ゲームへ"),
+              //   onPressed: () {
+              //     context.go('/game');
+              //   },
+              // ),
               ElevatedButton(
-                child: Text("ゲームへ"),
+                child: Text("クリアへ"),
                 onPressed: () {
-                  context.go('/game');
+                  context.go('/clear');
                 },
               ),
             ],

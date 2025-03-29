@@ -5,6 +5,7 @@ import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
 import 'package:flutter_jr_hackathon/widget/target_widget.dart';
 import 'package:flutter_jr_hackathon/widget/timer_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -16,18 +17,32 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final GyroController gyroController = GyroController();
   int targetCount = 0;
+  int gameScreenTime = 0; // ゲーム経過時間
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     gyroController.initGyro();
-    // gyroController.generateMultipleTargets(context, targetCount);
+    startGameTimer(); // ゲームタイマーを開始
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     gyroController.generateMultipleTargets(context, targetCount);
+  }
+
+  void startGameTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        gameScreenTime++; // 1秒ごとにゲーム時間を増加
+      });
+    });
+  }
+
+  void stopGameTimer() {
+    _timer?.cancel();
   }
 
   void handleTargetCountChanged(int newCount) {
@@ -37,7 +52,17 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel(); // メモリリークを防ぐためにタイマーをキャンセル
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final args =
+        GoRouterState.of(context).extra as Map<String, dynamic>?; // データを取得
+    final checkTime = args?['checkTime'] ?? 0; // デフォルト0
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -56,7 +81,6 @@ class _GameScreenState extends State<GameScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // const Icon(Icons.adjust, size: 60, color: Colors.blue),
                   const SizedBox(height: 30),
                   Expanded(
                     flex: 3,
@@ -64,39 +88,17 @@ class _GameScreenState extends State<GameScreen> {
                       children: [
                         FPSGameTest(
                           onTargetCountChanged: handleTargetCountChanged,
-                        ), // 3Dゲーム画面を内蔵
+                        ),
                         Center(
                           child: Icon(
                             Icons.adjust,
                             size: 60,
                             color: Colors.blue,
-                          ), // アイコンを中央に配置
+                          ),
                         ),
                       ],
                     ),
                   ),
-
-                  // Shootボタン
-                  // ElevatedButton(
-                  //   onPressed: () {},
-                  //   style: ElevatedButton.styleFrom(
-                  //     elevation: 8,
-                  //     side: BorderSide(
-                  //       color: Colors.grey,
-                  //       width: 4,
-                  //     ),
-                  //     backgroundColor: const Color.fromARGB(177, 255, 0, 60),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 30, vertical: 15),
-                  //   ),
-                  //   child: const Text(
-                  //     'Shoot',
-                  //     style: TextStyle(
-                  //         fontWeight: FontWeight.bold,
-                  //         fontSize: 20,
-                  //         color: Colors.white),
-                  //   ),
-                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -110,6 +112,16 @@ class _GameScreenState extends State<GameScreen> {
                         style: TextStyle(fontSize: 32),
                       ),
                     ],
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      stopGameTimer(); // ゲーム終了時にタイマー停止
+                      context.go('/clear', extra: {
+                        'checkTime': checkTime,
+                        'gameTime': gameScreenTime
+                      });
+                    },
+                    child: Text('クリア画面へ'),
                   ),
                 ],
               ),

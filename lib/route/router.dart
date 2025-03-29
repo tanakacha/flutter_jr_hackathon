@@ -20,13 +20,20 @@ class AppRouter {
       ),
       GoRoute(
         path: '/game',
-        builder: (context, state) => GameScreen(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?; // `extra` を取得
+          final checkTime = extra?['checkTime'] ?? 0; // デフォルト値を設定
+          return GameScreen();
+        },
       ),
       GoRoute(
         path: '/clear',
-        builder: (context, state) => ClearScreen(),
-        // context.go('/clear', extra: alarmId);
-
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?; // `extra` を取得
+          final checkTime = extra?['checkTime'] ?? 0;
+          final gameTime = extra?['gameTime'] ?? 0;
+          return ClearScreen(); // `ClearScreen` に値を渡す
+        },
       ),
     ],
   );
