@@ -20,7 +20,7 @@ class _CheckScreenState extends ConsumerState<CheckScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final wakeUpTime = ref.watch(wakeUpTimeNotifierProvider);
+    final checkTime = ref.watch(wakeUpTimeNotifierProvider);
     final WakeUpMinutes =
         ref.watch(wakeUpTimeNotifierProvider.notifier).minutes;
     final WakeUpSeconds =
@@ -58,9 +58,13 @@ class _CheckScreenState extends ConsumerState<CheckScreen> {
                 ),
                 onPressed: () {
                   ref.read(wakeUpTimeNotifierProvider.notifier).stopTimer();
-                  context.go('/game');
+
                   print('timer');
-                  print(wakeUpTime);
+
+                  // context.go('/game');
+                  context.go('/game', extra: {'checkTime': checkTime});
+                  print('timer');
+                  print(checkTime);
                 },
               ),
               ElevatedButton(
