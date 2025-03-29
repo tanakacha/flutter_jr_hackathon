@@ -239,7 +239,15 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                 items: [
                   DropdownMenuItem<String>(
                     value: 'assets/marimba.mp3',
-                    child: Text('Marimba'),
+                    child: Text('マリンバ'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'assets/mozart.mp3',
+                    child: Text('モーツァルト'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'assets/one_piece.mp3',
+                    child: Text('ワンピース'),
                   ),
                 ],
                 onChanged: (value) {
@@ -308,10 +316,14 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                   Expanded(
                     child: Slider(
                       value: volume!,
+                      min: 0.1,
+                      max: 1.0,
+                      activeColor: Colors.green,
                       onChanged: (value) {
                         setState(() {
                           volume = value;
                         });
+                        print(value);
                       },
                     ),
                   ),

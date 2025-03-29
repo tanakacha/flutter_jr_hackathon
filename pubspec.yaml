@@ -68,4 +68,6 @@ flutter:
 
   assets:
     - assets/marimba.mp3
+    - assets/mozart.mp3
+    - assets/one_piece.mp3
     - assets/models/
