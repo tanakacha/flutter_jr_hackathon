@@ -20,9 +20,13 @@ class SphereData {
 
 class FPSGameTest extends StatefulWidget {
   final ValueChanged<int> onTargetCountChanged;
+  final int checkTime;
+  final int gameScreenTime; // ゲーム経過時間
   const FPSGameTest({
     super.key,
     required this.onTargetCountChanged,
+    required this.checkTime,
+    required this.gameScreenTime,
   });
 
   @override
