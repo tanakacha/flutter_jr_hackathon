@@ -1,9 +1,8 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_game.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
-import 'package:flutter_jr_hackathon/widget/target_widget.dart';
-import 'package:flutter_jr_hackathon/widget/timer_widget.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/timer/timer_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
@@ -88,6 +87,8 @@ class _GameScreenState extends State<GameScreen> {
                       children: [
                         FPSGameTest(
                           onTargetCountChanged: handleTargetCountChanged,
+                          checkTime: checkTime,
+                          gameScreenTime: gameScreenTime,
                         ),
                         Center(
                           child: Icon(
