@@ -246,15 +246,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
     texture.generateMipmaps = true;
     texture.needsUpdate = true;
     texture.flipY = true; // this flipY is only for web
-    // final materials = await mtlLoader.fromAsset('assets/models/blank.mtl');
-    // if (materials == null) {
-    //   print('Error: Blank.mtl file not found or empty.');
-    //   return;
-    // }
-    // materials!.preload(); // マテリアルを準備
-
-    // OBJLoaderにマテリアルを設定
-    // loader.setMaterials(materials);
 
     try {
       // モデルを非同期でロード
