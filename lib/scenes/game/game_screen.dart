@@ -52,7 +52,6 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   void dispose() {
-    print('dispose');
     _timer?.cancel(); // メモリリークを防ぐためにタイマーをキャンセル
     super.dispose();
   }
