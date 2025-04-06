@@ -20,13 +20,9 @@ class SphereData {
 
 class FPSGameTest extends StatefulWidget {
   final ValueChanged<int> onTargetCountChanged;
-  final int checkTime;
-  final int gameScreenTime; // ゲーム経過時間
   const FPSGameTest({
     super.key,
     required this.onTargetCountChanged,
-    required this.checkTime,
-    required this.gameScreenTime,
   });
 
   @override
@@ -52,19 +48,14 @@ class _FPSGamePageState extends State<FPSGameTest> {
   @override
   void initState() {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (mounted) {
-        setState(() {
-          data.removeAt(0);
-          data.add(threeJs.clock.fps);
-        });
-      }
+      setState(() {
+        data.removeAt(0);
+        data.add(threeJs.clock.fps);
+      });
     });
     threeJs = three.ThreeJS(
         onSetupComplete: () {
-          if (mounted) {
-            setState(() {});
-          }
-
+          setState(() {});
           // Keybindings
           // Add force on keydown
           threeJs.domElement.addEventListener(three.PeripheralType.pointerdown,
@@ -85,15 +76,13 @@ class _FPSGamePageState extends State<FPSGameTest> {
         setup: setup);
     super.initState();
     gyroscopeEvents.listen((GyroscopeEvent event) {
-      if (mounted) {
-        setState(() {
-          yaw += event.y * 0.1; // Y軸の回転データを使用
-          pitch += event.x * 0.1; // X軸の回転データを使用
+      setState(() {
+        yaw += event.y * 0.1; // Y軸の回転データを使用
+        pitch += event.x * 0.1; // X軸の回転データを使用
 
-          // カメラの回転を更新
-          updateCameraRotation();
-        });
-      }
+        // カメラの回転を更新
+        updateCameraRotation();
+      });
     });
   }
 
@@ -101,7 +90,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
   void dispose() {
     timer.cancel();
     threeJs.dispose();
-    gyroscopeEvents.drain();
     three.loading.clear();
     super.dispose();
   }
@@ -246,6 +234,15 @@ class _FPSGamePageState extends State<FPSGameTest> {
     texture.generateMipmaps = true;
     texture.needsUpdate = true;
     texture.flipY = true; // this flipY is only for web
+    // final materials = await mtlLoader.fromAsset('assets/models/blank.mtl');
+    // if (materials == null) {
+    //   print('Error: Blank.mtl file not found or empty.');
+    //   return;
+    // }
+    // materials!.preload(); // マテリアルを準備
+
+    // OBJLoaderにマテリアルを設定
+    // loader.setMaterials(materials);
 
     try {
       // モデルを非同期でロード
@@ -392,6 +389,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
     // 衝突判定
     if (distanceSquared <= 25.0) {
+      print('Hit! 玉が的に当たりました！');
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
   }
@@ -405,12 +403,8 @@ class _FPSGamePageState extends State<FPSGameTest> {
     threeJs.scene.remove(sphere.mesh);
 
     widget.onTargetCountChanged(targetCount);
-
     if (targetCount >= 10) {
-      context.go('/clear', extra: {
-        'checkTime': widget.checkTime,
-        'gameTime': widget.gameScreenTime
-      });
+      GoRouter.of(context).go('/clear');
     }
   }
 
@@ -423,7 +417,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
       }
       // 玉と的の当たり判定をチェック
       for (final target in targets) {
-        print("Hit");
         checkCollisionWithTarget(sphere, target);
       }
     }
