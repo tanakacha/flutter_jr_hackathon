@@ -1,6 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_jr_hackathon/scenes/widget/game/fps_test.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_game.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
 import 'package:flutter_jr_hackathon/scenes/widget/timer/timer_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +52,7 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   void dispose() {
+    print('dispose');
     _timer?.cancel(); // メモリリークを防ぐためにタイマーをキャンセル
     super.dispose();
   }

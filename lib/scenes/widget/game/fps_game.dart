@@ -52,6 +52,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   @override
   void initState() {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      
       setState(() {
         data.removeAt(0);
         data.add(threeJs.clock.fps);
@@ -94,6 +95,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   void dispose() {
     timer.cancel();
     threeJs.dispose();
+    gyroscopeEvents.drain();
     three.loading.clear();
     super.dispose();
   }
@@ -407,8 +409,17 @@ class _FPSGamePageState extends State<FPSGameTest> {
     threeJs.scene.remove(sphere.mesh);
 
     widget.onTargetCountChanged(targetCount);
+    //timer止めないとかも
     if (targetCount >= 10) {
-      GoRouter.of(context).go('/clear');
+      //rog
+      print("Time");
+      print(widget.checkTime);
+      print(widget.gameScreenTime);
+
+      context.go('/clear', extra: {
+        'checkTime': widget.checkTime,
+        'gameTime': widget.gameScreenTime
+      });
     }
   }
 
