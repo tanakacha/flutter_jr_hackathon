@@ -99,10 +99,12 @@
 - アラームが鳴ってからゲーム開始までのタイムとゲーム開始からゲームクリアまでのタイムの２つを画面表示することで、利用者のモチベーションにつながるようなゲーム性を高めました。
 - riverpod を用いて、経過時間とタイマーの状態管理を行えるよう注力しました。
 
-##　使用技術
-Flutter
+## 使用技術
+言語：Dart、フレームワーク：Flutter、 パッケージ：river_pod,three_js等
 
 ## デモンストレーション動画
 
-<video controls src="画面収録 2025-03-29 11.31.44.mov" title="Title"></video>
-<video controls src="画面収録 2025-03-29 11.31.44.mp4" title="Title"></video>
+
+https://github.com/user-attachments/assets/21af15d6-54cb-4352-bbe1-ccc2df33be0e
+
+
