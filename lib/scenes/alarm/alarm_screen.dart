@@ -100,7 +100,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   void dispose() {
     ringSubscription?.cancel();
+    ringSubscription = null;
     updateSubscription?.cancel();
+    updateSubscription = null;
     super.dispose();
   }
 
