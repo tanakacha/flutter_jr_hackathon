@@ -26,6 +26,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
 
   static StreamSubscription<AlarmSet>? ringSubscription;
   static StreamSubscription<AlarmSet>? updateSubscription;
+  bool hasNavigatedToCheck = false;
 
   // 途中
   @override
@@ -56,14 +57,22 @@ class _AlarmScreenState extends State<AlarmScreen> {
   // フル
   Future<void> ringingAlarmsChanged(AlarmSet alarms) async {
     if (alarms.alarms.isEmpty) return;
-    // 仮の確認画面用
-    // await Navigator.push(
-    //   context,
-    //   MaterialPageRoute<void>(builder: (context) {
-    //     return RingScreen(alarmSettings: alarms.alarms.first);
-    //   }),
-    // );
-    context.go('/check'); // 確認画面に遷移する
+
+    // アラームが鳴っている間、画面遷移を繰り返す
+    while (alarms.alarms.isNotEmpty) {
+      if (!mounted) break; // ウィジェットが破棄されている場合はループを終了
+
+      // 遷移済みでない場合のみ遷移
+      if (!hasNavigatedToCheck) {
+        print('Navigating to /check because alarm is ringing');
+        context.go('/check'); // 確認画面に遷移
+        hasNavigatedToCheck = true; // 遷移済みフラグを設定
+      }
+
+      // 一定時間待機してから再度遷移
+      await Future.delayed(Duration(seconds: 5));
+    }
+    // アラームリストを更新
     if (mounted) {
       unawaited(loadAlarms());
     }

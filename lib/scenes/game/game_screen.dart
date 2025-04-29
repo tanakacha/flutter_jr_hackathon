@@ -66,7 +66,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         GoRouterState.of(context).extra as Map<String, dynamic>?; // データを取得
     final checkTime = args?['checkTime'] ?? 0; // デフォルト0
 
-    final difficulty = ref.watch(difficultyNotifierProvider);
+    final difficulty = ref.read(difficultyNotifierProvider);
     print('Difficulty: $difficulty');
     if (difficulty == 'Easy') {
       print('EasyTarget');
