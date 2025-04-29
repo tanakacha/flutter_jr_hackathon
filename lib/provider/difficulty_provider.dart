@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'difficulty_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DifficultyNotifier extends _$DifficultyNotifier {
   @override
   String build() {

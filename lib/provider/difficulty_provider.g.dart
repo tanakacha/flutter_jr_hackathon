@@ -7,12 +7,12 @@ part of 'difficulty_provider.dart';
 // **************************************************************************
 
 String _$difficultyNotifierHash() =>
-    r'8cdbd8222addde7013debbaea09d037187feb1b6';
+    r'f774a00c792d8d84fae6e7a0b31572c763e06700';
 
 /// See also [DifficultyNotifier].
 @ProviderFor(DifficultyNotifier)
 final difficultyNotifierProvider =
-    AutoDisposeNotifierProvider<DifficultyNotifier, String>.internal(
+    NotifierProvider<DifficultyNotifier, String>.internal(
   DifficultyNotifier.new,
   name: r'difficultyNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final difficultyNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DifficultyNotifier = AutoDisposeNotifier<String>;
+typedef _$DifficultyNotifier = Notifier<String>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
