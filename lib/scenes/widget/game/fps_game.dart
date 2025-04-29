@@ -430,6 +430,9 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
       // 玉と的の当たり判定をチェック
       for (final target in targets) {
         checkCollisionWithTarget(sphere, target);
+        // if (!threeJs.scene.children.contains(target)) {
+        //   break; // 現在のループを終了して次の弾に進む
+        // }
       }
     }
 
