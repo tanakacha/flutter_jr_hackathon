@@ -43,7 +43,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
   late three.ThreeJS threeJs;
   final vertex = three.Vector3.zero();
   final color = three.Color();
-  List<three.Mesh> boxes = [];
+  List<three.Object3D> boxes = [];
   List<three.Object3D> targets = [];
   int targetCount = 0;
 
@@ -198,37 +198,62 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     final floor = three.Mesh(floorGeometry, floorMaterial);
     threeJs.scene.add(floor);
 
-    // ボックスの設定
-    final boxGeometry = three.BoxGeometry(20, 20, 20).toNonIndexed();
-    position = boxGeometry.attributes['position'];
-    final List<double> colorsBox = [];
-    for (int i = 0, l = position.count; i < l; i++) {
-      color.setHSL(math.Random().nextDouble() * 0.3 + 0.5, 0.75,
-          math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
-      colorsBox.addAll([color.red, color.green, color.blue]);
+    final loader = three.OBJLoader(); // OBJローダーを使用
+
+    // モデルを一度だけロード
+    final objTemplate = await loader.fromAsset('assets/models/lamp.obj');
+    if (objTemplate == null) {
+      print('モデルの読み込みに失敗しました');
+      return;
     }
-    boxGeometry.setAttributeFromString(
-        'color', three.Float32BufferAttribute.fromList(colorsBox, 3));
+    for (int i = 0; i < 150; i++) {
+      // 数を半分に変更
 
-    for (int i = 0; i < 400; i++) {
-      final boxMaterial = three.MeshPhongMaterial.fromMap(
-          {'specular': 0xffffff, 'flatShading': true, 'vertexColors': true});
-      boxMaterial.color.setHSL(math.Random().nextDouble() * 0.2 + 0.5, 0.75,
-          math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
+      try {
+        // モデルを非同期でロード
 
-      final box = three.Mesh(boxGeometry, boxMaterial);
-      box.position.x =
-          (math.Random().nextDouble() * 20 - 10).floor() * 20 + 100;
-      box.position.y = (math.Random().nextDouble() * 20).floor() * 20 + 100;
-      box.position.z = (math.Random().nextDouble() * 20 - 10).floor() * 50;
+        final obj = objTemplate.clone(true);
 
-      threeJs.scene.add(box);
-      boxes.add(box);
+        // ランダムな位置を設定
+        obj.position.x =
+            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 30;
+        obj.position.y = (math.Random().nextDouble() * 20).floor() * 5 + 40;
+        obj.position.z =
+            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
+
+        obj.scale.setValues(20, 20, 20); // スケールを調整
+
+        obj.traverse((child) {
+          if (child is three.Mesh) {
+            // 赤～オレンジのみに限定した柔らかい色を生成
+            final lanternColor = three.Color();
+            lanternColor.setHSL(
+              math.Random().nextDouble() * 0.1, // 色相 (赤～オレンジ)
+              math.Random().nextDouble() * 0.3 + 0.7, // 彩度 (柔らかい色合い)
+              math.Random().nextDouble() * 0.4 + 0.5, // 明度 (明るめの色)
+            );
+
+            // マテリアルに色を適用
+            child.material = three.MeshStandardMaterial.fromMap({
+              'color': lanternColor,
+              'emissive': lanternColor, // 自発光色を設定
+              'emissiveIntensity': 0.5, // 自発光の強さ
+            });
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        // シーンに追加
+        threeJs.scene.add(obj);
+        boxes.add(obj); // 的リストに追加
+      } catch (e) {
+        print('Error loading target model: $e');
+      }
     }
     //的の設置
-    for (int i = 0; i < widget.targetGoal; i++) {
-      await loadTargetModel();
-    }
+
+    await loadTargetModel();
 
     threeJs.addAnimationEvent((dt) {
       double deltaTime = math.min(0.05, dt) / stepsPerFrame;
@@ -253,56 +278,57 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     texture.needsUpdate = true;
     texture.flipY = true; // this flipY is only for web
 
-    try {
-      // モデルを非同期でロード
-      final obj = (await loader
-          .fromAsset('assets/models/target.obj'))!; // 修正: `gltf`ではなく`obj`
-      if (obj == null) {
-        print('モデルの読み込みに失敗しました');
-        return;
+    final objTemplate = await loader.fromAsset('assets/models/1.object.obj');
+    if (objTemplate == null) {
+      print('モデルの読み込みに失敗しました');
+      return;
+    }
+
+    for (int i = 0; i < widget.targetGoal; i++) {
+      try {
+        // モデルを非同期でロード
+        final obj = objTemplate.clone(true);
+        three.Vector3 forward = getForwardVector();
+        // 的の位置を設定
+        double randomDistance = 50 + math.Random().nextDouble() * 40;
+
+        three.Vector3 targetPosition = three.Vector3()
+          ..setFrom(threeJs.camera.position)
+          ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
+
+        // X・Y方向にランダムにオフセット
+
+        double offsetX = (math.Random().nextDouble() * 40) *
+            (math.Random().nextBool() ? 1 : -1); // -20.0 ～ 20.0
+        double offsetY = (math.Random().nextDouble() * 10 + 10); // 20.0 ～ 40.0
+        targetPosition.x += offsetX;
+        targetPosition.y += offsetY;
+
+        obj.position.setFrom(targetPosition);
+
+        obj.scale.setValues(5, 5, 5);
+        obj.lookAt(threeJs.camera.position);
+
+        // 子オブジェクトをトラバースして設定
+        obj.traverse((child) {
+          if (child is three.Mesh) {
+            child.material = three.MeshStandardMaterial.fromMap({
+              'color': three.Color.fromHex32(0xff0000), // 赤色を設定
+            });
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+
+        targets.add(obj);
+
+        // 的をシーンに追加
+        threeJs.scene.add(obj);
+        // 的をオブジェクトリストに追加
+      } catch (e) {
+        print('Error loading target model: $e');
       }
-
-      three.Vector3 forward = getForwardVector();
-      // 的の位置を設定
-      double randomDistance =
-          30 + math.Random().nextDouble() * 20; // 3.0から5.0のランダムな距離
-
-      three.Vector3 targetPosition = three.Vector3()
-        ..setFrom(threeJs.camera.position)
-        ..addScaled(forward, randomDistance); // プレイヤーの前方20ユニット
-
-      // X・Y方向にランダムにオフセット
-
-      double offsetX = (math.Random().nextDouble() * 40) *
-          (math.Random().nextBool() ? 1 : -1); // -20.0 ～ 20.0
-      double offsetY = (math.Random().nextDouble() * 10 + 10); // 20.0 ～ 40.0
-      targetPosition.x += offsetX;
-      targetPosition.y += offsetY;
-
-      obj.position.setFrom(targetPosition);
-
-      obj.scale.setValues(0.1, 0.1, 0.1);
-      obj.lookAt(threeJs.camera.position);
-
-      // 子オブジェクトをトラバースして設定
-      obj.traverse((child) {
-        if (child is three.Mesh) {
-          // 外側のマテリアルを適用
-          child.material?.map = texture;
-
-          // 必要に応じて内側のマテリアルを適用
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-
-      targets.add(obj);
-
-      // 的をシーンに追加
-      threeJs.scene.add(obj);
-      // 的をオブジェクトリストに追加
-    } catch (e) {
-      print('Error loading target model: $e');
     }
   }
 
@@ -397,7 +423,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= 25.0) {
+    if (distanceSquared <= 15.0) {
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
   }
