@@ -256,7 +256,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     try {
       // モデルを非同期でロード
       final obj = (await loader
-          .fromAsset('assets/models/target.obj'))!; // 修正: `gltf`ではなく`obj`
+          .fromAsset('assets/models/1.object.obj'))!; // 修正: `gltf`ではなく`obj`
       if (obj == null) {
         print('モデルの読み込みに失敗しました');
         return;
@@ -281,16 +281,21 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
       obj.position.setFrom(targetPosition);
 
-      obj.scale.setValues(0.1, 0.1, 0.1);
+      obj.scale.setValues(5, 5, 5);
       obj.lookAt(threeJs.camera.position);
 
       // 子オブジェクトをトラバースして設定
       obj.traverse((child) {
         if (child is three.Mesh) {
-          // 外側のマテリアルを適用
-          child.material?.map = texture;
+          // // 外側のマテリアルを適用
+          // child.material?.map = texture;
 
-          // 必要に応じて内側のマテリアルを適用
+          // // 必要に応じて内側のマテリアルを適用
+          // child.castShadow = true;
+          child.material = three.MeshStandardMaterial.fromMap({
+            'color': three.Color.fromHex32(0xff0000), // 赤色を設定
+          });
+
           child.castShadow = true;
           child.receiveShadow = true;
         }
@@ -397,7 +402,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     double distanceSquared = dx * dx + dy * dy + dz * dz;
 
     // 衝突判定
-    if (distanceSquared <= 25.0) {
+    if (distanceSquared <= 15.0) {
       handleTargetHit(target, sphere); // 衝突時の処理を呼び出し
     }
   }
