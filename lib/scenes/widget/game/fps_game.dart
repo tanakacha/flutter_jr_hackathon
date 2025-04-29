@@ -24,11 +24,13 @@ class FPSGameTest extends ConsumerStatefulWidget {
   final ValueChanged<int> onTargetCountChanged;
   final int checkTime;
   final int gameScreenTime; // ゲーム経過時間
+  final int targetGoal; // 目標スコア
   const FPSGameTest({
     super.key,
     required this.onTargetCountChanged,
     required this.checkTime,
     required this.gameScreenTime,
+    required this.targetGoal,
   });
 
   @override
@@ -46,7 +48,6 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
   int targetCount = 0;
 
   late double radius;
-  late int targetGoal;
 
   // ジャイロスコープのデータを保持
   double yaw = 0.0; // 水平方向の回転
@@ -55,14 +56,6 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
   @override
   void initState() {
     super.initState();
-    final difficulty = ref.read(difficultyNotifierProvider);
-    if (difficulty == 'Easy') {
-      targetGoal = 10;
-    } else if (difficulty == 'Normal') {
-      targetGoal = 20;
-    } else if (difficulty == 'Hard') {
-      targetGoal = 30;
-    }
 
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (mounted) {
@@ -233,7 +226,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
       boxes.add(box);
     }
     //的の設置
-    for (int i = 0; i < targetGoal; i++) {
+    for (int i = 0; i < widget.targetGoal; i++) {
       await loadTargetModel();
     }
 
@@ -419,7 +412,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
     widget.onTargetCountChanged(targetCount);
 
-    if (targetCount >= targetGoal) {
+    if (targetCount >= widget.targetGoal) {
       context.go('/clear', extra: {
         'checkTime': widget.checkTime,
         'gameTime': widget.gameScreenTime

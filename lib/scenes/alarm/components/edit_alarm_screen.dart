@@ -282,11 +282,9 @@ class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
                   ),
                 ],
                 onChanged: (value) {
-                  setState(() {
-                    ref
-                        .read(difficultyNotifierProvider.notifier)
-                        .setDifficulty(value!);
-                  });
+                  ref
+                      .read(difficultyNotifierProvider.notifier)
+                      .setDifficulty(value!);
                 },
               ),
             ],
