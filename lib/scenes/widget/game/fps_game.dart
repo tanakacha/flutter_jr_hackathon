@@ -216,8 +216,8 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
         // ランダムな位置を設定
         obj.position.x =
-            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 30;
-        obj.position.y = (math.Random().nextDouble() * 20).floor() * 5 + 40;
+            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 20;
+        obj.position.y = (math.Random().nextDouble() * 20).floor() * 3 + 40;
         obj.position.z =
             (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
 
@@ -298,9 +298,9 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
         // X・Y方向にランダムにオフセット
 
-        double offsetX = (math.Random().nextDouble() * 40) *
-            (math.Random().nextBool() ? 1 : -1); // -20.0 ～ 20.0
-        double offsetY = (math.Random().nextDouble() * 10 + 10); // 20.0 ～ 40.0
+        double offsetX = (math.Random().nextDouble() * 60) *
+            (math.Random().nextBool() ? 1 : -1);
+        double offsetY = (math.Random().nextDouble() * 20 + 20);
         targetPosition.x += offsetX;
         targetPosition.y += offsetY;
 
