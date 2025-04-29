@@ -28,6 +28,19 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     super.initState();
     // gyroController.initGyro();
     startGameTimer(); // ゲームタイマーを開始
+
+    final difficulty = ref.read(difficultyNotifierProvider);
+    print('Difficulty: $difficulty');
+    if (difficulty == 'Easy') {
+      print('EasyTarget');
+      targetGoal = 10;
+    } else if (difficulty == 'Normal') {
+      print('NormalTarget');
+      targetGoal = 20;
+    } else if (difficulty == 'Hard') {
+      print('HardTarget');
+      targetGoal = 30;
+    }
   }
 
   @override
@@ -65,19 +78,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final args =
         GoRouterState.of(context).extra as Map<String, dynamic>?; // データを取得
     final checkTime = args?['checkTime'] ?? 0; // デフォルト0
-
-    final difficulty = ref.read(difficultyNotifierProvider);
-    print('Difficulty: $difficulty');
-    if (difficulty == 'Easy') {
-      print('EasyTarget');
-      targetGoal = 10;
-    } else if (difficulty == 'Normal') {
-      print('NormalTarget');
-      targetGoal = 20;
-    } else if (difficulty == 'Hard') {
-      print('HardTarget');
-      targetGoal = 30;
-    }
 
     return Scaffold(
         appBar: AppBar(
