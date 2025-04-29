@@ -3,17 +3,19 @@ import 'package:alarm/model/volume_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:flutter_jr_hackathon/provider/difficulty_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditAlarmScreen extends StatefulWidget {
+class EditAlarmScreen extends ConsumerStatefulWidget {
   const EditAlarmScreen({super.key, this.alarmSettings});
 
   final AlarmSettings? alarmSettings;
 
   @override
-  State<EditAlarmScreen> createState() => _EditAlarmScreenState();
+  ConsumerState<EditAlarmScreen> createState() => _EditAlarmScreenState();
 }
 
-class _EditAlarmScreenState extends State<EditAlarmScreen> {
+class _EditAlarmScreenState extends ConsumerState<EditAlarmScreen> {
   bool loading = false;
 
   late bool creating;
@@ -152,7 +154,8 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    late int gameDifficulty = 3;
+    final gameDifficulty = ref.watch(difficultyNotifierProvider);
+    print('gameDifficulty: $gameDifficulty');
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -265,22 +268,24 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
               DropdownButton(
                 value: gameDifficulty,
                 items: [
-                  DropdownMenuItem<int?>(
-                    value: 3,
+                  DropdownMenuItem<String?>(
+                    value: "Easy",
                     child: Text('ぼちぼち'),
                   ),
-                  DropdownMenuItem<int?>(
-                    value: 5,
+                  DropdownMenuItem<String?>(
+                    value: "Normal",
                     child: Text('可能な限り'),
                   ),
-                  DropdownMenuItem<int?>(
-                    value: 10,
+                  DropdownMenuItem<String?>(
+                    value: "Hard",
                     child: Text('絶対に'),
                   ),
                 ],
                 onChanged: (value) {
                   setState(() {
-                    gameDifficulty = value!;
+                    ref
+                        .read(difficultyNotifierProvider.notifier)
+                        .setDifficulty(value!);
                   });
                 },
               ),

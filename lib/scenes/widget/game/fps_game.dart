@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_jr_hackathon/provider/difficulty_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:three_js/three_js.dart' as three;
@@ -18,7 +20,7 @@ class SphereData {
   three.Vector3 velocity;
 }
 
-class FPSGameTest extends StatefulWidget {
+class FPSGameTest extends ConsumerStatefulWidget {
   final ValueChanged<int> onTargetCountChanged;
   final int checkTime;
   final int gameScreenTime; // ゲーム経過時間
@@ -33,7 +35,7 @@ class FPSGameTest extends StatefulWidget {
   _FPSGamePageState createState() => _FPSGamePageState();
 }
 
-class _FPSGamePageState extends State<FPSGameTest> {
+class _FPSGamePageState extends ConsumerState<FPSGameTest> {
   List<int> data = List.filled(60, 0, growable: true);
   late Timer timer;
   late three.ThreeJS threeJs;
@@ -44,6 +46,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
   int targetCount = 0;
 
   late double radius;
+  late int targetGoal;
 
   // ジャイロスコープのデータを保持
   double yaw = 0.0; // 水平方向の回転
@@ -51,6 +54,16 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
   @override
   void initState() {
+    super.initState();
+    final difficulty = ref.read(difficultyNotifierProvider);
+    if (difficulty == 'Easy') {
+      targetGoal = 10;
+    } else if (difficulty == 'Normal') {
+      targetGoal = 20;
+    } else if (difficulty == 'Hard') {
+      targetGoal = 30;
+    }
+
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (mounted) {
         setState(() {
@@ -83,7 +96,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
           });
         },
         setup: setup);
-    super.initState();
+
     gyroscopeEvents.listen((GyroscopeEvent event) {
       if (mounted) {
         setState(() {
@@ -220,7 +233,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
       boxes.add(box);
     }
     //的の設置
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < targetGoal; i++) {
       await loadTargetModel();
     }
 
@@ -406,7 +419,7 @@ class _FPSGamePageState extends State<FPSGameTest> {
 
     widget.onTargetCountChanged(targetCount);
 
-    if (targetCount >= 10) {
+    if (targetCount >= targetGoal) {
       context.go('/clear', extra: {
         'checkTime': widget.checkTime,
         'gameTime': widget.gameScreenTime
@@ -423,7 +436,6 @@ class _FPSGamePageState extends State<FPSGameTest> {
       }
       // 玉と的の当たり判定をチェック
       for (final target in targets) {
-        print("Hit");
         checkCollisionWithTarget(sphere, target);
       }
     }

@@ -14,22 +14,23 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  final GyroController gyroController = GyroController();
+  // final GyroController gyroController = GyroController();
   int targetCount = 0;
+  int targetCountMax = 10; // 最大ターゲット数
   int gameScreenTime = 0; // ゲーム経過時間
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    gyroController.initGyro();
+    // gyroController.initGyro();
     startGameTimer(); // ゲームタイマーを開始
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    gyroController.generateMultipleTargets(context, targetCount);
+    // gyroController.generateMultipleTargets(context, targetCount);
   }
 
   void startGameTimer() {
