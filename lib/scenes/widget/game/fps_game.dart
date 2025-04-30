@@ -154,8 +154,10 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
   Future<void> setup() async {
     threeJs.scene = three.Scene();
-    threeJs.scene.background = three.Color.fromHex32(0xffffff); // 背景を白に変更
-    threeJs.scene.fog = three.Fog(0xffffff, 0, 750); // フォグを追加
+
+    // 背景を朝日の色に変更
+    threeJs.scene.background = three.Color.fromHex32(0xffcc99); // 暖かいオレンジ色
+    threeJs.scene.fog = three.Fog(0xffcc99, 0, 750); // フォグも背景色に合わせる
 
     threeJs.camera =
         three.PerspectiveCamera(70, threeJs.width / threeJs.height, 0.1, 1000);
@@ -164,7 +166,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     threeJs.camera.rotation.order = three.RotationOrders.yxz;
 
     // ライト設定
-    final light = three.HemisphereLight(0xeeeeff, 0x777788, 0.8);
+    final light = three.HemisphereLight(0xffeedd, 0x777788, 0.8); // 朝日のような柔らかい光
     light.position.setValues(0.5, 1, 0.75);
     threeJs.scene.add(light);
 
