@@ -65,9 +65,15 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: CustomFont
+      fonts:
+        - asset: assets/fonts/huiwen-zhengkai/匯文正楷.ttf
+      
 
   assets:
     - assets/marimba.mp3
     - assets/mozart.mp3
     - assets/one_piece.mp3
     - assets/models/
+    - assets/textures/

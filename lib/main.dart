@@ -28,6 +28,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      theme: ThemeData(
+        fontFamily: 'CustomFont', // アプリ全体にカスタムフォントを適用
+      ),
       routerConfig: AppRouter.router,
     );
   }
