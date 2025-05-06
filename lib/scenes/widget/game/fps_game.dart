@@ -286,7 +286,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     final textureLoader = three.TextureLoader();
     late three.Texture texture;
     textureLoader.flipY = false;
-    texture = (await textureLoader.fromAsset('assets/models/target.png'))!;
+    texture = (await textureLoader.fromAsset('assets/textures/target.jpg'))!;
     texture.magFilter = three.LinearFilter;
     texture.minFilter = three.LinearMipmapLinearFilter;
     texture.generateMipmaps = true;
@@ -328,9 +328,10 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
         obj.traverse((child) {
           if (child is three.Mesh) {
             child.material = three.MeshStandardMaterial.fromMap({
-              'color': three.Color.fromHex32(0xff0000), // 赤色を設定
+              'map': texture, // テクスチャを適用
+              'roughness': 0.8,
+              'metalness': 0.0,
             });
-
             child.castShadow = true;
             child.receiveShadow = true;
           }
