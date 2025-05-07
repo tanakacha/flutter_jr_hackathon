@@ -49,6 +49,7 @@ dependencies:
   permission_handler: ^11.4.0
   gap: ^3.0.1
   flutter_gl: ^0.0.21
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:
