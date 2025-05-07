@@ -229,6 +229,11 @@ class _FPSGamePageState extends State<FPSGameTest> {
     late three.Texture texture;
     textureLoader.flipY = false;
     texture = (await textureLoader.fromAsset('assets/models/target.png'))!;
+    /// 思った通りの見た目にするため
+    // 色空間を明示的に設定
+    texture.encoding = three.sRGBEncoding;
+    // テクスチャのflipYを設定
+    texture.flipY = true; // 必要に応じて true または false に設定
     texture.magFilter = three.LinearFilter;
     texture.minFilter = three.LinearMipmapLinearFilter;
     texture.generateMipmaps = true;

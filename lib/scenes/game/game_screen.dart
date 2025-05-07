@@ -89,11 +89,21 @@ class _GameScreenState extends State<GameScreen> {
                         FPSGameTest(
                           onTargetCountChanged: handleTargetCountChanged,
                         ),
+                        // デモ画面用
+                        // Center(
+                        //   child: Icon(
+                        //     Icons.adjust,
+                        //     size: 60,
+                        //     color: Colors.blue,
+                        //   ),
+                        // ),
+                        // 照準の写真を使用
                         Center(
-                          child: Icon(
-                            Icons.adjust,
-                            size: 60,
-                            color: Colors.blue,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            child: Image.asset(
+                                'assets/images/aim-svgrepo-com.png'),
                           ),
                         ),
                       ],
@@ -102,27 +112,30 @@ class _GameScreenState extends State<GameScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.adjust,
-                        size: 32,
-                        color: Colors.amber,
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(
+                            'assets/images/target-05-svgrepo-com.png'),
                       ),
                       Text(
-                        '×score ${targetCount}/10',
+                        '${targetCount}/10',
                         style: TextStyle(fontSize: 32),
                       ),
                     ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      stopGameTimer(); // ゲーム終了時にタイマー停止
-                      context.go('/clear', extra: {
-                        'checkTime': checkTime,
-                        'gameTime': gameScreenTime
-                      });
-                    },
-                    child: Text('クリア画面へ'),
-                  ),
+                  // // デモ画面
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     stopGameTimer(); // ゲーム終了時にタイマー停止
+                  //     context.go('/clear', extra: {
+                  //       'checkTime': checkTime,
+                  //       'gameTime': gameScreenTime
+                  //     });
+                  //   },
+                  //   child: Text('クリア画面へ'),
+                  // ),
+                  const SizedBox(height: 30),
                 ],
               ),
             ),
