@@ -20,12 +20,12 @@ class SphereData {
   three.Vector3 velocity;
 }
 
-class FPSGameTest extends ConsumerStatefulWidget {
+class FPSGameCyber extends ConsumerStatefulWidget {
   final ValueChanged<int> onTargetCountChanged;
   final int checkTime;
   final int gameScreenTime; // ゲーム経過時間
   final int targetGoal; // 目標スコア
-  const FPSGameTest({
+  const FPSGameCyber({
     super.key,
     required this.onTargetCountChanged,
     required this.checkTime,
@@ -37,7 +37,7 @@ class FPSGameTest extends ConsumerStatefulWidget {
   _FPSGamePageState createState() => _FPSGamePageState();
 }
 
-class _FPSGamePageState extends ConsumerState<FPSGameTest> {
+class _FPSGamePageState extends ConsumerState<FPSGameCyber> {
   List<int> data = List.filled(60, 0, growable: true);
   late Timer timer;
   late three.ThreeJS threeJs;
@@ -221,7 +221,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
       print('モデルの読み込みに失敗しました');
       return;
     }
-    
+
     for (int i = 0; i < 300; i++) {
       // 数を半分に変更
 

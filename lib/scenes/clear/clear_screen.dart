@@ -70,14 +70,13 @@ class _ClearScreenState extends State<ClearScreen> {
                   'ランク', // ランクの文字
                   style: TextStyle(
                     fontSize: 40, // 大きなフォントサイズ
-                    color: Colors.grey,
                     fontWeight: FontWeight.bold, // 太字
                   ),
                 ),
                 Text(
                   'S', // ランクを表示
                   style: TextStyle(
-                    fontSize: 62, // 大きなフォントサイズ
+                    fontSize: 80, // 大きなフォントサイズ
                     fontWeight: FontWeight.bold, // 太字
                     color: Color(0xFFFFD700), // ランクの色
                   ),
@@ -85,7 +84,7 @@ class _ClearScreenState extends State<ClearScreen> {
                 const SizedBox(height: 20), // ランクとタイムの間にスペースを追加
                 Text('起床時間: ${formatTime(checkTime)}',
                     style: TextStyle(fontSize: 24)),
-                Text('撃破時間: ${formatTime(gameTime)}',
+                Text('撃破時間:${formatTime(gameTime)}',
                     style: TextStyle(fontSize: 24)),
                 const SizedBox(height: 20),
                 ElevatedButton(
@@ -103,7 +102,7 @@ class _ClearScreenState extends State<ClearScreen> {
               confettiController: _confettiController,
               blastDirectionality: BlastDirectionality.explosive, // 紙吹雪の方向
               shouldLoop: true, // 紙吹雪をループさせない
-              numberOfParticles: 50,
+              numberOfParticles: 30,
               colors: const [
                 Colors.red,
                 Colors.blue,
