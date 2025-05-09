@@ -1,6 +1,7 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jr_hackathon/provider/difficulty_provider.dart';
+import 'package:flutter_jr_hackathon/scenes/widget/game/fps_cyber.dart';
 import 'package:flutter_jr_hackathon/scenes/widget/game/fps_game.dart';
 import 'package:flutter_jr_hackathon/utils/game/gyro/gyro_calc.dart';
 import 'package:flutter_jr_hackathon/scenes/widget/timer/timer_widget.dart';
@@ -17,6 +18,7 @@ class GameScreen extends ConsumerStatefulWidget {
 
 class _GameScreenState extends ConsumerState<GameScreen> {
   // final GyroController gyroController = GyroController();
+  bool isCyberMode = true; // サイバーゲームモード
   int targetCount = 0;
   int targetCountMax = 10; // 最大ターゲット数
   int gameScreenTime = 0; // ゲーム経過時間
@@ -102,12 +104,19 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     flex: 3,
                     child: Stack(
                       children: [
-                        FPSGameTest(
-                          onTargetCountChanged: handleTargetCountChanged,
-                          checkTime: checkTime,
-                          gameScreenTime: gameScreenTime,
-                          targetGoal: targetGoal,
-                        ),
+                        isCyberMode
+                            ? FPSGameCyber(
+                                onTargetCountChanged: handleTargetCountChanged,
+                                checkTime: 0,
+                                gameScreenTime: gameScreenTime,
+                                targetGoal: targetGoal,
+                              )
+                            : FPSGameTest(
+                                onTargetCountChanged: handleTargetCountChanged,
+                                checkTime: 0,
+                                gameScreenTime: gameScreenTime,
+                                targetGoal: targetGoal,
+                              ),
                         Center(
                           child: Icon(
                             Icons.adjust,

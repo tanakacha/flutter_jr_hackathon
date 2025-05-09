@@ -154,8 +154,10 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
   Future<void> setup() async {
     threeJs.scene = three.Scene();
-    threeJs.scene.background = three.Color.fromHex32(0xffffff); // 背景を白に変更
-    threeJs.scene.fog = three.Fog(0xffffff, 0, 750); // フォグを追加
+
+    // 背景を朝日の色に変更
+    threeJs.scene.background = three.Color.fromHex32(0x8ED1E0); //
+    threeJs.scene.fog = three.Fog(0xffcc99, 0, 750); // フォグも背景色に合わせる
 
     threeJs.camera =
         three.PerspectiveCamera(70, threeJs.width / threeJs.height, 0.1, 1000);
@@ -164,39 +166,52 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     threeJs.camera.rotation.order = three.RotationOrders.yxz;
 
     // ライト設定
-    final light = three.HemisphereLight(0xeeeeff, 0x777788, 0.8);
+    final light = three.HemisphereLight(0xffeedd, 0x777788, 0.8); // 朝日のような柔らかい光
     light.position.setValues(0.5, 1, 0.75);
     threeJs.scene.add(light);
 
-    // 床の設定
-    three.BufferGeometry floorGeometry =
-        three.PlaneGeometry(2000, 2000, 100, 100);
-    floorGeometry.rotateX(-math.pi / 2);
+// 床のジオメトリを作成
+    final floorGeometry = three.PlaneGeometry(2000, 2000); // 床の大きさを設定
+    floorGeometry.rotateX(-math.pi / 2); // 床を水平に配置
 
-    dynamic position = floorGeometry.attributes['position'];
-    for (int i = 0, l = position.count; i < l; i++) {
-      vertex.fromBuffer(position, i);
-      vertex.x += math.Random().nextDouble() * 20 - 10;
-      vertex.y += math.Random().nextDouble() * 2;
-      vertex.z += math.Random().nextDouble() * 20 - 10;
-      position.setXYZ(i, vertex.x, vertex.y, vertex.z);
-    }
+// 床のマテリアルを作成
+    final floorMaterial = three.MeshStandardMaterial.fromMap({
+      'color': three.Color.fromHex32(0x808080), // 灰色の床
+      'roughness': 0.8, // 粗さを設定
+      'metalness': 0.0, // 金属感をなくす
+    });
 
-    floorGeometry = floorGeometry.toNonIndexed();
-    position = floorGeometry.attributes['position'];
-    final List<double> colorsFloor = [];
-    for (int i = 0, l = position.count; i < l; i++) {
-      color.setHSL(math.Random().nextDouble() * 0.3 + 0.5, 0.75,
-          math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
-      colorsFloor.addAll([color.red, color.green, color.blue]);
-    }
-    floorGeometry.setAttributeFromString(
-        'color', three.Float32BufferAttribute.fromList(colorsFloor, 3));
-
-    final floorMaterial =
-        three.MeshBasicMaterial.fromMap({'vertexColors': true});
+// 床のメッシュを作成
     final floor = three.Mesh(floorGeometry, floorMaterial);
+    floor.receiveShadow = true; // 床が影を受け取るように設定
+
+// シーンに床を追加
     threeJs.scene.add(floor);
+
+    // dynamic position = floorGeometry.attributes['position'];
+    // for (int i = 0, l = position.count; i < l; i++) {
+    //   vertex.fromBuffer(position, i);
+    //   vertex.x += math.Random().nextDouble() * 20 - 10;
+    //   vertex.y += math.Random().nextDouble() * 2;
+    //   vertex.z += math.Random().nextDouble() * 20 - 10;
+    //   position.setXYZ(i, vertex.x, vertex.y, vertex.z);
+    // }
+
+    // floorGeometry = floorGeometry.toNonIndexed();
+    // position = floorGeometry.attributes['position'];
+    // final List<double> colorsFloor = [];
+    // for (int i = 0, l = position.count; i < l; i++) {
+    //   color.setHSL(math.Random().nextDouble() * 0.3 + 0.5, 0.75,
+    //       math.Random().nextDouble() * 0.25 + 0.75, three.ColorSpace.srgb);
+    //   colorsFloor.addAll([color.red, color.green, color.blue]);
+    // }
+    // floorGeometry.setAttributeFromString(
+    //     'color', three.Float32BufferAttribute.fromList(colorsFloor, 3));
+
+    // final floorMaterial =
+    //     three.MeshBasicMaterial.fromMap({'vertexColors': true});
+    // final floor = three.Mesh(floorGeometry, floorMaterial);
+    // threeJs.scene.add(floor);
 
     final loader = three.OBJLoader(); // OBJローダーを使用
 
@@ -206,7 +221,8 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
       print('モデルの読み込みに失敗しました');
       return;
     }
-    for (int i = 0; i < 150; i++) {
+    
+    for (int i = 0; i < 300; i++) {
       // 数を半分に変更
 
       try {
@@ -216,8 +232,8 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
         // ランダムな位置を設定
         obj.position.x =
-            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 30;
-        obj.position.y = (math.Random().nextDouble() * 20).floor() * 5 + 40;
+            (math.Random().nextDouble() * 20 - 10).floor() * 20 + 20;
+        obj.position.y = (math.Random().nextDouble() * 20).floor() * 3 + 40;
         obj.position.z =
             (math.Random().nextDouble() * 20 - 10).floor() * 20 + 40;
 
@@ -271,7 +287,7 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
     final textureLoader = three.TextureLoader();
     late three.Texture texture;
     textureLoader.flipY = false;
-    texture = (await textureLoader.fromAsset('assets/models/target.png'))!;
+    texture = (await textureLoader.fromAsset('assets/textures/target.jpg'))!;
     texture.magFilter = three.LinearFilter;
     texture.minFilter = three.LinearMipmapLinearFilter;
     texture.generateMipmaps = true;
@@ -298,9 +314,9 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
 
         // X・Y方向にランダムにオフセット
 
-        double offsetX = (math.Random().nextDouble() * 40) *
-            (math.Random().nextBool() ? 1 : -1); // -20.0 ～ 20.0
-        double offsetY = (math.Random().nextDouble() * 10 + 10); // 20.0 ～ 40.0
+        double offsetX = (math.Random().nextDouble() * 60) *
+            (math.Random().nextBool() ? 1 : -1);
+        double offsetY = (math.Random().nextDouble() * 20 + 20);
         targetPosition.x += offsetX;
         targetPosition.y += offsetY;
 
@@ -313,9 +329,10 @@ class _FPSGamePageState extends ConsumerState<FPSGameTest> {
         obj.traverse((child) {
           if (child is three.Mesh) {
             child.material = three.MeshStandardMaterial.fromMap({
-              'color': three.Color.fromHex32(0xff0000), // 赤色を設定
+              'map': texture, // テクスチャを適用
+              'roughness': 0.8,
+              'metalness': 0.0,
             });
-
             child.castShadow = true;
             child.receiveShadow = true;
           }

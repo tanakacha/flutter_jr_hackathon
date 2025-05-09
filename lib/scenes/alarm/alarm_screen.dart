@@ -21,6 +21,7 @@ class AlarmScreen extends StatefulWidget {
 }
 
 class _AlarmScreenState extends State<AlarmScreen> {
+  final themaColor = Colors.red;
   List<AlarmSettings> alarms = [];
   Notifications? notifications;
 
@@ -110,7 +111,10 @@ class _AlarmScreenState extends State<AlarmScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('アラーム設定'),
+        title: const Text(
+          'アラーム設定',
+          style: TextStyle(color: Colors.red), // テキストの色を赤に設定
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -147,44 +151,21 @@ class _AlarmScreenState extends State<AlarmScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(Icons.alarm_add_rounded, size: 33),
-                            Text('新規めざまし作成'),
+                            Icon(
+                              Icons.alarm_add_rounded,
+                              size: 33,
+                              color: themaColor,
+                            ),
+                            Text(
+                              '新規めざまし作成',
+                              style: TextStyle(color: Colors.red, fontSize: 18),
+                            ),
                             Gap(10),
                           ],
                         ),
                       ),
-                // Center(
-                //     child: Text(
-                //       'アラームなし',
-                //       style: Theme.of(context).textTheme.titleMedium,
-                //     ),
-                //   ),
               ),
-              // FloatingActionButton(
-              //   onPressed: () {
-              //     navigateToAlarmScreen(null);
-              //   },
-              //   child: Icon(Icons.alarm_add_rounded, size: 33),
-              // ),
-              // ElevatedButton(
-              //   child: Text("確認画面へ"),
-              //   onPressed: () {
-              //     context.go('/check');
-              //   },
-              // ),
-              // 〇〇へという遷移ボタンをコメントアウトするとUIが崩れるのでその時は代わりに"Gap(0),"を書いてください、"Row(),"とかでもなんでも構いません、アラーム画面のUIが気になる時はガンガン変更してください
-              // ElevatedButton(
-              //   child: Text("ゲームへ"),
-              //   onPressed: () {
-              //     context.go('/game');
-              //   },
-              // ),
-              // ElevatedButton(
-              //   child: Text("クリアへ"),
-              //   onPressed: () {
-              //     context.go('/clear');
-              //   },
-              // ),
+
               Gap(0),
             ],
           ),
