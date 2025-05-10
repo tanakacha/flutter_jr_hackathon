@@ -53,24 +53,24 @@ class _ClearScreenState extends State<ClearScreen> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
-  String getRank(Duration checkTime, Duration gameTime) {
-  if (checkTime.inSeconds <= 5 && gameTime.inSeconds <= 30) {
-    return 'S';
-  } else if (checkTime.inSeconds <= 10 && gameTime.inSeconds <= 60) {
-    return 'A';
-  } else if (checkTime.inSeconds <= 20 && gameTime.inSeconds <= 90) {
-    return 'B';
-  } else if (checkTime.inSeconds <= 30 && gameTime.inSeconds <= 120) {
-    return 'C';
-  } else {
-    return 'D';
-  }
-}  // ランクを決定する関数
+  String getRank(int checkTime, int gameTime) {
+    if (checkTime <= 5 && gameTime <= 30) {
+      return 'S';
+    } else if (checkTime <= 10 && gameTime <= 60) {
+      return 'A';
+    } else if (checkTime <= 20 && gameTime <= 90) {
+      return 'B';
+    } else if (checkTime <= 30 && gameTime <= 120) {
+      return 'C';
+    } else {
+      return 'D';
+    }
+  } // ランクを決定する関数
 
   @override
   Widget build(BuildContext context) {
-    final String rank = getRank(checkTime as Duration, gameTime as Duration);
-    
+    final String rank = getRank(checkTime, gameTime);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('クリア！！'),
