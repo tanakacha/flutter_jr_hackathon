@@ -118,10 +118,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                                 targetGoal: targetGoal,
                               ),
                         Center(
-                          child: Icon(
-                            Icons.adjust,
-                            size: 60,
-                            color: Colors.blue,
+                          child: SizedBox(
+                            width: 80,
+                            height: 80,
+                            child: Image.asset(
+                                'assets/images/aim-svgrepo-com.png'),
                           ),
                         ),
                       ],
